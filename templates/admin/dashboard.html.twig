@@ -1,0 +1,17 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    <h1 class="text-5xl font-black text-purple-600">Bienvenue dans l'admin JobConnect TN</h1>
+{% endblock %}
+
+{% block main %}
+<div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
+    <h2 class="text-4xl font-bold mb-8">Tu es maintenant le BOSS ABSOLU de la plateforme</h2>
+    <p class="text-2xl text-gray-700">Utilise le menu à gauche pour tout gérer</p>
+    <div class="mt-12">
+        <a href="{{ path('joboffer_list') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-3xl px-20 py-10 rounded-full hover:shadow-2xl transition">
+            Retour au site
+        </a>
+    </div>
+</div>
+{% endblock %}

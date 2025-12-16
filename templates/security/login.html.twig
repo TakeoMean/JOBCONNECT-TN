@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-600 px-2">
+    <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
+        <h1 class="text-3xl font-black text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
+            Connexion
+        </h1>
+
+        {% if error %}
+            <div class="bg-red-100 text-red-700 p-2 rounded mb-4 text-center text-sm">
+                Identifiants incorrects
+            </div>
+        {% endif %}
+
+        <form method="post" class="space-y-3">
+            <input type="email" name="email" value="{{ last_username }}" placeholder="Email" required class="w-full px-4 py-2 rounded-lg border text-sm">
+            <input type="password" name="password" placeholder="Mot de passe" required class="w-full px-4 py-2 rounded-lg border text-sm">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-2 rounded-lg text-sm hover:shadow-md transform hover:scale-105 transition">
+                Se connecter
+            </button>
+        </form>
+
+        <p class="text-center mt-4 text-gray-600 text-xs">
+            Pas de compte ? 
+            <a href="{{ path('candidate_register') }}" class="text-green-600 font-bold">Candidat</a> |
+            <a href="{{ path('recruiter_register') }}" class="text-purple-600 font-bold">Recruteur</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

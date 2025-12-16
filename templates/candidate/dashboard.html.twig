@@ -1,0 +1,57 @@
+{# templates/candidate/dashboard.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-10">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-black">
+            Bonjour {{ app.user.fullName }} !
+        </h1>
+
+        <p class="text-lg mt-3">
+            Ton abonnement :
+            {% if app.user.subscription %}
+                <span class="bg-yellow-400 px-3 py-1 rounded-full font-bold text-sm">
+                    {{ app.user.subscription|upper }}
+                </span>
+                <span class="text-sm text-gray-600 ml-2">
+                    (expire le {{ app.user.subscriptionEndsAt|date('d/m/Y') }})
+                </span>
+            {% else %}
+                <span class="bg-gray-300 px-3 py-1 rounded-full font-bold text-sm">
+                    GRATUIT
+                </span>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+            <div class="text-5xl mb-3">📄</div>
+            <p class="text-3xl font-black text-blue-600">18</p>
+            <p class="text-sm mt-1">Candidatures envoyées</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+            <div class="text-5xl mb-3">❤️</div>
+            <p class="text-3xl font-black text-red-600">9</p>
+            <p class="text-sm mt-1">Offres sauvegardées</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+            <div class="text-5xl mb-3">💬</div>
+            <p class="text-3xl font-black text-green-600">4</p>
+            <p class="text-sm mt-1">Nouveaux messages</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-10 space-x-4">
+        <a href="{{ path('joboffer_list') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg px-6 py-2 rounded-full rounded-full">
+            VOIR LES OFFRES
+        </a>
+        <a href="{{ path('candidate_profile') }}" class="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold text-lg px-6 py-2 rounded-full">
+            MON PROFIL
+        </a>
+    </div>
+</div>
+{% endblock %}

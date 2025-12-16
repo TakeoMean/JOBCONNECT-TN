@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-20">
+    <h1 class="text-7xl font-black text-center mb-20 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        Abonnements Recruteurs
+    </h1>
+
+    <div class="grid md:grid-cols-3 gap-16 max-w-7xl mx-auto px-6">
+        <!-- Gratuit -->
+        <div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
+            <h2 class="text-5xl font-black">Gratuit</h2>
+            <p class="text-8xl font-black mt-8">0 DT</p>
+            <ul class="mt-12 space-y-6 text-2xl">
+                <li>✅ 3 offres/mois</li>
+                <li>✅ Profil entreprise</li>
+                <li>❌ Mise en avant</li>
+            </ul>
+            <button class="mt-16 bg-gray-600 text-white font-black text-3xl px-24 py-10 rounded-full">Actuel</button>
+        </div>
+
+        <!-- Pro Recruteur -->
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-2xl p-12 text-center transform scale-110 relative text-white">
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-12 py-4 rounded-full text-2xl font-black">
+                RECOMMANDÉ
+            </div>
+            <h2 class="text-5xl font-black">Pro</h2>
+            <p class="text-8xl font-black mt-8">490 DT</p>
+            <ul class="mt-12 space-y-6 text-2xl">
+                <li>✅ Offres illimitées</li>
+                <li>✅ Mise en avant</li>
+                <li>✅ Tests personnalisés</li>
+                <li>✅ Statistiques</li>
+            </ul>
+            <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'pro'}) }}" 
+               class="mt-16 bg-yellow-400 text-purple-900 font-black text-3xl px-24 py-10 rounded-full block">
+                Choisir Pro
+            </a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="bg-gradient-to-br from-black to-gray-800 rounded-3xl shadow-2xl p-12 text-center text-white">
+            <h2 class="text-5xl font-black">Enterprise</h2>
+            <p class="text-8xl font-black mt-8">990 DT</p>
+            <ul class="mt-12 space-y-6 text-2xl">
+                <li>✅ Tout Pro</li>
+                <li>✅ Recrutement dédié</li>
+                <li>✅ Support VIP</li>
+                <li>✅ API accès</li>
+            </ul>
+            <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'enterprise'}) }}" 
+               class="mt-16 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-black text-3xl px-24 py-10 rounded-full block">
+                Choisir Enterprise
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JobConnect TN{% endblock %} - La plateforme n°1 emploi Tunisie</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+<header class="bg-white shadow-2xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+        <a href="{{ path('joboffer_list') }}" class="flex items-center space-x-3">
+            <div class="text-5xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                JobConnect<span class="text-green-600">TN</span>
+            </div>
+        </a>
+
+        <nav class="flex items-center space-x-6 text-xl font-semibold">
+
+    <a href="{{ path('joboffer_list') }}" class="hover:text-purple-600 transition">Offres</a>
+
+    {% if app.user is defined and app.user is not null %}
+        {% set userNotifications = [] %}
+        {% if app.user.getNotifications is defined %}
+            {% set userNotifications = app.user.getNotifications() %}
+        {% endif %}
+        {% set unreadCount = userNotifications|filter(n => not n.isRead)|length %}
+
+        <!-- Dashboard Link -->
+        {% if 'ROLE_CANDIDATE' in app.user.roles %}
+            <a href="{{ path('candidate_dashboard') }}" class="hover:text-purple-600 transition">Dashboard</a>
+        {% elseif 'ROLE_RECRUITER' in app.user.roles %}
+            <a href="{{ path('recruiter_dashboard') }}" class="hover:text-purple-600 transition">Dashboard</a>
+        {% endif %}
+
+        <!-- Subscription badge -->
+        {% if 'ROLE_CANDIDATE' in app.user.roles %}
+            <a href="#" class="bg-yellow-400 text-black px-6 py-2 rounded-full hover:shadow-xl transition">
+                {{ app.user.subscription|default('FREE')|upper }}
+            </a>
+        {% elseif 'ROLE_RECRUITER' in app.user.roles %}
+            <a href="#" class="bg-purple-600 text-white px-6 py-2 rounded-full hover:shadow-xl transition">
+                {{ app.user.subscription|default('FREE')|upper }}
+            </a>
+        {% endif %}
+
+        <!-- Notifications -->
+        <div class="relative group">
+            <a href="{{ path('notification_list') }}">
+                <i class="fas fa-bell text-2xl hover:text-purple-600 transition cursor-pointer"></i>
+                {% if unreadCount > 0 %}
+                    <span class="absolute -top-2 -right-2 bg-red-600 text-white text-sm font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse-slow shadow-lg">
+                        {{ unreadCount > 99 ? '99+' : unreadCount }}
+                    </span>
+                {% endif %}
+            </a>
+        </div>
+
+        <!-- Profile photo / logo -->
+        <a href="{{ path('profile') }}" class="ml-4">
+            {% if 'ROLE_RECRUITER' in app.user.roles %}
+                <img src="{{ app.user.logo ? asset('/uploads/recruiter/logo/' ~ app.user.logo) : asset('default-logo.png') }}"
+                     alt="Logo {{ app.user.companyName }}"
+                     class="w-10 h-10 rounded-full border-2 border-purple-600 hover:border-purple-800 transition">
+            {% elseif 'ROLE_CANDIDATE' in app.user.roles %}
+                <img src="{{ app.user.photo ? asset('/uploads/candidate/photo/' ~ app.user.photo) : asset('default-avatar.png') }}"
+                     alt="Photo {{ app.user.fullName }}"
+                     class="w-10 h-10 rounded-full border-2 border-purple-600 hover:border-purple-800 transition">
+            {% endif %}
+        </a>
+
+        <!-- Logout -->
+        <a href="{{ path('app_logout') }}"
+           class="ml-4 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
+           Déconnexion
+        </a>
+
+    {% else %}
+        <a href="{{ path('app_login') }}" class="hover:text-purple-600 transition">Connexion</a>
+        <a href="{{ path('candidate_register') }}" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full font-black text-xl hover:shadow-xl transition">
+            Candidat
+        </a>
+        <a href="{{ path('recruiter_register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-black text-xl hover:shadow-xl transition">
+            Recruteur
+        </a>
+    {% endif %}
+</nav>
+
+    </div>
+</header>
+
+<main class="flex-1">
+    {% block body %}{% endblock %}
+</main>
+
+<footer class="bg-gray-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <div class="text-4xl font-black mb-8">JobConnect<span class="text-green-500">TN</span></div>
+        <p class="text-xl mb-8">La plateforme n°1 pour l'emploi et les stages en Tunisie</p>
+        <div class="flex justify-center space-x-12 text-3xl mb-8">
+            <i class="fab fa-facebook hover:text-blue-500 cursor-pointer transition"></i>
+            <i class="fab fa-linkedin hover:text-blue-700 cursor-pointer transition"></i>
+            <i class="fab fa-instagram hover:text-pink-500 cursor-pointer transition"></i>
+        </div>
+        <p class="text-gray-400">© 2025 JobConnect TN - Tous droits réservés</p>
+    </div>
+</footer>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-20">
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-16">
+        <h1 class="text-6xl font-black text-center mb-16 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Publier une nouvelle offre
+        </h1>
+
+        <form method="post" class="space-y-12">
+            <input type="text" name="title" placeholder="Titre de l'offre" required class="w-full px-10 py-8 border-2 rounded-2xl text-2xl">
+            <textarea name="description" rows="10" placeholder="Description complète..." required class="w-full px-10 py-8 border-2 rounded-2xl text-xl"></textarea>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <input type="text" name="location" placeholder="Lieu (ex: Tunis, Remote)" required class="w-full px-10 py-8 border-2 rounded-2xl text-2xl">
+                <input type="number" name="salary" placeholder="Salaire (DT) - optionnel" class="w-full px-10 py-8 border-2 rounded-2xl text-2xl">
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <select name="contractType" class="px-10 py-8 border-2 rounded-2xl text-2xl">
+                    <option>CDI</option>
+                    <option>CDD</option>
+                    <option>Stage</option>
+                    <option>Freelance</option>
+                </select>
+
+                <label class="flex items-center space-x-6 text-2xl">
+                    <input type="checkbox" name="remote" class="w-12 h-12">
+                    <span>Télétravail autorisé</span>
+                </label>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-4xl px-32 py-12 rounded-full hover:shadow-2xl transform hover:scale-110 transition">
+                    PUBLIER L'OFFRE
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

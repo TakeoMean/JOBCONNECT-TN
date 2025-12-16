@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 py-12">
+    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-2xl">
+        <h1 class="text-4xl font-black text-center mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Devenir Recruteur
+        </h1>
+
+        <form method="post" enctype="multipart/form-data" class="grid md:grid-cols-2 gap-6">
+            <input type="text" name="companyName" placeholder="Nom de l'entreprise" required class="w-full px-6 py-3 border-2 rounded-xl text-lg">
+            <input type="text" name="responsiblePerson" placeholder="Nom du responsable" required class="w-full px-6 py-3 border-2 rounded-xl text-lg">
+            <input type="email" name="email" placeholder="Email professionnel" required class="w-full px-6 py-3 border-2 rounded-xl text-lg">
+            <input type="password" name="password" placeholder="Mot de passe" required class="w-full px-6 py-3 border-2 rounded-xl text-lg">
+
+            <input type="text" name="sector" placeholder="Secteur (ex: IT, Finance...)" class="w-full px-6 py-3 border-2 rounded-xl text-lg">
+            <textarea name="address" rows="3" placeholder="Adresse complète" class="w-full px-6 py-3 border-2 rounded-xl text-lg"></textarea>
+
+            {# Logo Upload #}
+            <div>
+                <label class="block text-lg font-semibold mb-2">Logo de l'entreprise</label>
+                <input type="file" id="logoFile" name="logoFile" accept="image/*" class="w-full" onchange="previewImage(event, 'logoPreview')">
+                <img id="logoPreview" class="mt-2 w-32 h-32 rounded-xl object-cover hidden">
+            </div>
+
+            {# Profile Photo Upload (optional) #}
+            <div>
+                <label class="block text-lg font-semibold mb-2">Photo de profil</label>
+                <input type="file" id="photoFile" name="photoFile" accept="image/*" class="w-full" onchange="previewImage(event, 'photoPreview')">
+                <img id="photoPreview" class="mt-2 w-24 h-24 rounded-full object-cover hidden">
+            </div>
+
+            <div class="md:col-span-2 text-center mt-4">
+                <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xl px-20 py-4 rounded-full hover:shadow-lg transform hover:scale-105 transition">
+                    DEVENIR RECRUTEUR
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewImage(event, previewId) {
+    const reader = new FileReader();
+    const preview = document.getElementById(previewId);
+    reader.onload = function(){
+        preview.src = reader.result;
+        preview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+{% endblock %}

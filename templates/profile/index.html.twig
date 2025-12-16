@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+    <div class="bg-white p-12 rounded-3xl shadow-2xl text-center max-w-md w-full">
+        <img src="{{ asset(user.photo ? '/uploads/' ~ user.photo : 'default-avatar.png') }}" alt="Photo de profil" class="w-24 h-24 rounded-full mx-auto mb-6">
+        <h1 class="text-3xl font-bold mb-2">{{ user.fullName ?? user.companyName }}</h1>
+        <p class="text-xl text-gray-600 mb-4">{{ user.email }}</p>
+
+        <a href="{{ path('app_logout') }}" class="bg-red-500 text-white px-8 py-3 rounded-full hover:bg-red-600 transition">
+            Se déconnecter
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-7xl font-black text-center mb-20 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            Mes Notifications
+        </h1>
+
+        <div class="space-y-8">
+            {% for notif in notifications %}
+            <div class="bg-white rounded-3xl shadow-2xl p-10 {% if not notif.isRead %}border-4 border-indigo-500{% endif %} transform hover:scale-105 transition">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <h3 class="text-3xl font-black text-indigo-600">{{ notif.title }}</h3>
+                        <p class="text-xl text-gray-700 mt-4">{{ notif.message }}</p>
+                        <p class="text-sm text-gray-500 mt-6">
+                            {{ notif.createdAt|ago }}
+                        </p>
+                    </div>
+                    {% if not notif.isRead %}
+                        <a href="{{ path('notification_read', {'id': notif.id}) }}" 
+                           class="bg-indigo-600 text-white px-10 py-6 rounded-full font-black text-xl hover:bg-indigo-700">
+                            Marquer comme lue
+                        </a>
+                    {% else %}
+                        <span class="bg-gray-300 text-gray-600 px-10 py-6 rounded-full font-black text-xl">
+                            Lue
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
