@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100 py-16">
+
+    <div class="bg-white shadow-2xl border border-gray-100 rounded-2xl p-12 w-full max-w-lg">
+
+        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8 tracking-wide">
+            Paiement sécurisé
+        </h1>
+
+        <div class="text-center text-gray-600 mb-10">
+            <span class="text-lg">Vous avez choisi :</span><br>
+            <strong class="text-blue-600 text-xl">{{ plan|upper }}</strong>
+            <span class="text-gray-500">pour</span>
+            <strong class="text-blue-600 text-xl">{{ type|capitalize }}</strong>
+        </div>
+
+        <form method="post" action="{{ path('payment_validate', {type: type, plan: plan}) }}" class="space-y-6">
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-1">Numéro de carte</label>
+                <input type="text" name="card" required
+                    placeholder="XXXX XXXX XXXX XXXX"
+                    class="w-full border border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 px-4 py-3 rounded-lg transition-all duration-300">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-1">Nom sur la carte</label>
+                <input type="text" name="name" required
+                    placeholder="Nom et prénom"
+                    class="w-full border border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 px-4 py-3 rounded-lg transition-all duration-300">
+            </div>
+
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="block text-gray-700 font-semibold mb-1">Expiration</label>
+                    <input type="text" name="exp" required placeholder="MM/YY"
+                        class="w-full border border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 px-4 py-3 rounded-lg transition-all duration-300">
+                </div>
+
+                <div class="w-1/2">
+                    <label class="block text-gray-700 font-semibold mb-1">CVV</label>
+                    <input type="text" name="cvv" required placeholder="123"
+                        class="w-full border border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-600 px-4 py-3 rounded-lg transition-all duration-300">
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg py-3 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                Confirmer le paiement
+            </button>
+
+        </form>
+
+        <p class="text-center text-gray-500 mt-8 text-sm">
+            Ceci est une interface de paiement simulée.
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

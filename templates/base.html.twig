@@ -3,119 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JobConnect TN - La plateforme n°1 pour l'emploi et les stages en Tunisie">
+    <meta name="keywords" content="emploi tunisie, recrutement, offres d'emploi, stages, jobconnect">
     <title>{% block title %}JobConnect TN{% endblock %} - La plateforme n°1 emploi Tunisie</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Custom Styles -->
     <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, #6366f1, #06b6d4);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .logo-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 25%, #ec4899 50%, #10b981 75%, #f59e0b 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
     </style>
 
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 
-<header class="bg-white shadow-2xl sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-        <a href="{{ path('joboffer_list') }}" class="flex items-center space-x-3">
-            <div class="text-5xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                JobConnect<span class="text-green-600">TN</span>
-            </div>
-        </a>
+<body class="text-gray-900 min-h-screen flex flex-col">
 
-        <nav class="flex items-center space-x-6 text-xl font-semibold">
+<!-- HEADER -->
+<header class="bg-white/95 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-20">
 
-    <a href="{{ path('joboffer_list') }}" class="hover:text-purple-600 transition">Offres</a>
+            <!-- LOGO -->
+            <a href="{{ path('joboffer_list') }}" class="flex items-center space-x-3 group">
+                <div class="flex items-center space-x-3">
+                    <!-- Logo Icon -->
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                            <i class="bi bi-briefcase-fill text-white text-xl"></i>
+                        </div>
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <div class="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-400 rounded-full"></div>
+                    </div>
 
-    {% if app.user is defined and app.user is not null %}
-        {% set userNotifications = [] %}
-        {% if app.user.getNotifications is defined %}
-            {% set userNotifications = app.user.getNotifications() %}
-        {% endif %}
-        {% set unreadCount = userNotifications|filter(n => not n.isRead)|length %}
-
-        <!-- Dashboard Link -->
-        {% if 'ROLE_CANDIDATE' in app.user.roles %}
-            <a href="{{ path('candidate_dashboard') }}" class="hover:text-purple-600 transition">Dashboard</a>
-        {% elseif 'ROLE_RECRUITER' in app.user.roles %}
-            <a href="{{ path('recruiter_dashboard') }}" class="hover:text-purple-600 transition">Dashboard</a>
-        {% endif %}
-
-        <!-- Subscription badge -->
-        {% if 'ROLE_CANDIDATE' in app.user.roles %}
-            <a href="#" class="bg-yellow-400 text-black px-6 py-2 rounded-full hover:shadow-xl transition">
-                {{ app.user.subscription|default('FREE')|upper }}
+                    <!-- Logo Text -->
+                    <div class="flex flex-col">
+                        <div class="text-2xl md:text-3xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
+                            JobConnect
+                        </div>
+                        <div class="text-lg md:text-xl font-bold text-emerald-500 -mt-1">
+                            TN
+                        </div>
+                    </div>
+                </div>
             </a>
-        {% elseif 'ROLE_RECRUITER' in app.user.roles %}
-            <a href="#" class="bg-purple-600 text-white px-6 py-2 rounded-full hover:shadow-xl transition">
-                {{ app.user.subscription|default('FREE')|upper }}
-            </a>
-        {% endif %}
 
-        <!-- Notifications -->
-        <div class="relative group">
-            <a href="{{ path('notification_list') }}">
-                <i class="fas fa-bell text-2xl hover:text-purple-600 transition cursor-pointer"></i>
-                {% if unreadCount > 0 %}
-                    <span class="absolute -top-2 -right-2 bg-red-600 text-white text-sm font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse-slow shadow-lg">
-                        {{ unreadCount > 99 ? '99+' : unreadCount }}
-                    </span>
+            <!-- NAVIGATION -->
+            <nav class="hidden lg:flex items-center space-x-8">
+
+                <!-- Public Links -->
+                <a href="{{ path('joboffer_list') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium text-lg">
+                    <i class="bi bi-search mr-2"></i>
+                    Offres
+                </a>
+
+                {% if app.user %}
+                    <!-- Dashboard Link -->
+                    {% if 'ROLE_CANDIDATE' in app.user.getRoles() %}
+                        <a href="{{ path('candidate_dashboard') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium text-lg">
+                            <i class="bi bi-speedometer2 mr-2"></i>
+                            Dashboard
+                        </a>
+                    {% elseif 'ROLE_RECRUITER' in app.user.getRoles() %}
+                        <a href="{{ path('recruiter_dashboard') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium text-lg">
+                            <i class="bi bi-speedometer2 mr-2"></i>
+                            Dashboard
+                        </a>
+                    {% endif %}
+
+                    <!-- Subscription Badge -->
+                    {% if 'ROLE_CANDIDATE' in app.user.getRoles() %}
+                        <a href="{{ path('candidate_plans') }}" class="bg-gradient-to-r from-amber-400 to-orange-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer">
+                            <i class="bi bi-star-fill mr-1"></i>
+                            {{ app.user.getSubscription()|default('FREE')|upper }}
+                        </a>
+                    {% elseif 'ROLE_RECRUITER' in app.user.getRoles() %}
+                        <a href="{{ path('recruiter_plans') }}" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer">
+                            <i class="bi bi-building mr-1"></i>
+                            {{ app.user.getSubscription()|default('FREE')|upper }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <a href="{{ path('notification_list') }}" class="nav-link text-gray-700 hover:text-indigo-600 p-2 rounded-full hover:bg-gray-100 transition-all duration-200">
+                            <i class="bi bi-bell text-xl"></i>
+                            {% if unread_notifications_count is defined and unread_notifications_count > 0 %}
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center animate-pulse shadow-lg border-2 border-white">
+                                    {{ unread_notifications_count > 99 ? '99+' : unread_notifications_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-all duration-200">
+                            {% if 'ROLE_RECRUITER' in app.user.getRoles() %}
+                                <img src="{{ app.user.getLogo() ? asset('/uploads/recruiter/logo/' ~ app.user.getLogo()) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTIwIDIwQzIyLjc2MTQgMjAgMjUgMTcuNzYxNCAyNSAxNUMyNSAxMi4yMzg2IDIyLjc2MTQgMTAgMjAgMTBDMTcuMjM4NiAxMCAxNSAxMi4yMzg2IDE1IDE1QzE1IDE3Ljc2MTQgMTcgMjAgMjAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+' }}"
+                                     alt="Logo" class="w-10 h-10 rounded-full border-2 border-indigo-200 hover:border-indigo-400 transition-colors">
+                            {% elseif 'ROLE_CANDIDATE' in app.user.getRoles() %}
+                                <img src="{{ app.user.getPhoto() ? asset('/uploads/candidate/photo/' ~ app.user.getPhoto()) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFNUU3RUIiLz4KPHBhdGggZD0iTTIwIDIwQzIyLjc2MTQgMjAgMjUgMTcuNzYxNCAyNSAxNUMyNSAxMi4yMzg2IDIyLjc2MTQgMTAgMjAgMTBDMTcuMjM4NiAxMCAxNSAxMi4yMzg2IDE1IDE1QzE1IDE3Ljc2MTQgMTcgMjAgMjAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+' }}"
+                                     alt="Photo" class="w-10 h-10 rounded-full border-2 border-indigo-200 hover:border-indigo-400 transition-colors">
+                            {% endif %}
+                            <i class="bi bi-chevron-down text-gray-500 group-hover:text-gray-700 transition-colors"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                            <div class="p-4 border-b border-gray-100">
+                                <p class="font-semibold text-gray-800">
+                                    {% if 'ROLE_RECRUITER' in app.user.getRoles() %}
+                                        {{ app.user.getCompanyName() }}
+                                    {% else %}
+                                        {{ app.user.getFullName() }}
+                                    {% endif %}
+                                </p>
+                                <p class="text-sm text-gray-500">{{ app.user.getEmail() }}</p>
+                            </div>
+                            <div class="py-2">
+                                <a href="{{ path('profile') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                                    <i class="bi bi-person mr-3"></i>
+                                    Mon Profil
+                                </a>
+                                <a href="{{ path('app_logout') }}" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-colors">
+                                    <i class="bi bi-box-arrow-right mr-3"></i>
+                                    Déconnexion
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <!-- Guest Links -->
+                    <a href="{{ path('app_login') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium text-lg">
+                        <i class="bi bi-box-arrow-in-right mr-2"></i>
+                        Connexion
+                    </a>
+                    <div class="flex space-x-3">
+                        <a href="{{ path('candidate_register') }}" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:scale-105 transition-all duration-200">
+                            <i class="bi bi-person-plus mr-2"></i>
+                            Candidat
+                        </a>
+                        <a href="{{ path('recruiter_register') }}" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:scale-105 transition-all duration-200">
+                            <i class="bi bi-building mr-2"></i>
+                            Recruteur
+                        </a>
+                    </div>
                 {% endif %}
-            </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" id="mobile-menu-button">
+                <i class="bi bi-list text-2xl text-gray-700"></i>
+            </button>
         </div>
 
-        <!-- Profile photo / logo -->
-        <a href="{{ path('profile') }}" class="ml-4">
-            {% if 'ROLE_RECRUITER' in app.user.roles %}
-                <img src="{{ app.user.logo ? asset('/uploads/recruiter/logo/' ~ app.user.logo) : asset('default-logo.png') }}"
-                     alt="Logo {{ app.user.companyName }}"
-                     class="w-10 h-10 rounded-full border-2 border-purple-600 hover:border-purple-800 transition">
-            {% elseif 'ROLE_CANDIDATE' in app.user.roles %}
-                <img src="{{ app.user.photo ? asset('/uploads/candidate/photo/' ~ app.user.photo) : asset('default-avatar.png') }}"
-                     alt="Photo {{ app.user.fullName }}"
-                     class="w-10 h-10 rounded-full border-2 border-purple-600 hover:border-purple-800 transition">
-            {% endif %}
-        </a>
-
-        <!-- Logout -->
-        <a href="{{ path('app_logout') }}"
-           class="ml-4 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition">
-           Déconnexion
-        </a>
-
-    {% else %}
-        <a href="{{ path('app_login') }}" class="hover:text-purple-600 transition">Connexion</a>
-        <a href="{{ path('candidate_register') }}" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full font-black text-xl hover:shadow-xl transition">
-            Candidat
-        </a>
-        <a href="{{ path('recruiter_register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-black text-xl hover:shadow-xl transition">
-            Recruteur
-        </a>
-    {% endif %}
-</nav>
-
+        <!-- Mobile Menu -->
+        <div class="lg:hidden hidden bg-white border-t border-gray-100 py-4" id="mobile-menu">
+            <div class="space-y-2">
+                <a href="{{ path('joboffer_list') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                    <i class="bi bi-search mr-3"></i>
+                    Offres
+                </a>
+                {% if app.user %}
+                    {% if 'ROLE_CANDIDATE' in app.user.getRoles() %}
+                        <a href="{{ path('candidate_dashboard') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                            <i class="bi bi-speedometer2 mr-3"></i>
+                            Dashboard
+                        </a>
+                    {% elseif 'ROLE_RECRUITER' in app.user.getRoles() %}
+                        <a href="{{ path('recruiter_dashboard') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                            <i class="bi bi-speedometer2 mr-3"></i>
+                            Dashboard
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('notification_list') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                        <i class="bi bi-bell mr-3"></i>
+                        Notifications
+                        {% set userNotifications = app.user.getNotifications()|default([]) %}
+                        {% set unreadCount = userNotifications|filter(n => not n.getIsRead())|length %}
+                        {% if unreadCount > 0 %}
+                            <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">{{ unreadCount }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{{ path('profile') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                        <i class="bi bi-person mr-3"></i>
+                        Mon Profil
+                    </a>
+                    <a href="{{ path('app_logout') }}" class="block px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        <i class="bi bi-box-arrow-right mr-3"></i>
+                        Déconnexion
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                        <i class="bi bi-box-arrow-in-right mr-3"></i>
+                        Connexion
+                    </a>
+                    <a href="{{ path('candidate_register') }}" class="block px-4 py-3 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+                        <i class="bi bi-person-plus mr-3"></i>
+                        S'inscrire (Candidat)
+                    </a>
+                    <a href="{{ path('recruiter_register') }}" class="block px-4 py-3 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                        <i class="bi bi-building mr-3"></i>
+                        S'inscrire (Recruteur)
+                    </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </header>
 
+<!-- MAIN CONTENT -->
 <main class="flex-1">
     {% block body %}{% endblock %}
 </main>
 
-<footer class="bg-gray-900 text-white py-16">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-        <div class="text-4xl font-black mb-8">JobConnect<span class="text-green-500">TN</span></div>
-        <p class="text-xl mb-8">La plateforme n°1 pour l'emploi et les stages en Tunisie</p>
-        <div class="flex justify-center space-x-12 text-3xl mb-8">
-            <i class="fab fa-facebook hover:text-blue-500 cursor-pointer transition"></i>
-            <i class="fab fa-linkedin hover:text-blue-700 cursor-pointer transition"></i>
-            <i class="fab fa-instagram hover:text-pink-500 cursor-pointer transition"></i>
+<!-- FOOTER -->
+<footer class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, #ffffff 2px, transparent 2px), radial-gradient(circle at 75% 75%, #ffffff 2px, transparent 2px); background-size: 50px 50px;"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-16">
+        <div class="grid md:grid-cols-4 gap-8 mb-12">
+
+            <!-- Brand -->
+            <div class="md:col-span-2">
+                <div class="flex items-center space-x-4 mb-6">
+                    <!-- Footer Logo Icon -->
+                    <div class="relative">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <i class="bi bi-briefcase-fill text-white text-2xl"></i>
+                        </div>
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-1 -right-1 w-5 h-5 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <div class="absolute -bottom-1 -left-1 w-4 h-4 bg-blue-400 rounded-full"></div>
+                    </div>
+
+                    <!-- Footer Logo Text -->
+                    <div class="flex flex-col">
+                        <div class="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+                            JobConnect
+                        </div>
+                        <div class="text-xl md:text-2xl font-bold text-emerald-400 -mt-1">
+                            TN
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
+                    La plateforme n°1 pour l'emploi et les stages en Tunisie. Connectez talents et entreprises pour un avenir meilleur.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-indigo-600 rounded-full flex items-center justify-center transition-colors duration-200">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-200">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-pink-600 rounded-full flex items-center justify-center transition-colors duration-200">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-gray-800 hover:bg-blue-500 rounded-full flex items-center justify-center transition-colors duration-200">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-xl font-bold mb-6 text-white">Liens Rapides</h3>
+                <ul class="space-y-3">
+                    <li><a href="{{ path('joboffer_list') }}" class="text-gray-300 hover:text-white transition-colors">Offres d'emploi</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Entreprises</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Carrières</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">À propos</a></li>
+                </ul>
+            </div>
+
+            <!-- Support -->
+            <div>
+                <h3 class="text-xl font-bold mb-6 text-white">Support</h3>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Centre d'aide</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Confidentialité</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Conditions</a></li>
+                </ul>
+            </div>
         </div>
-        <p class="text-gray-400">© 2025 JobConnect TN - Tous droits réservés</p>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                © 2025 JobConnect TN - Tous droits réservés
+            </p>
+            <div class="flex items-center space-x-6 text-sm text-gray-400">
+                <span>Fait avec <i class="bi bi-heart-fill text-red-500 mx-1"></i> en Tunisie</span>
+                <span>•</span>
+                <span>v1.0.0</span>
+            </div>
+        </div>
     </div>
 </footer>
+
+<!-- Mobile Menu Script -->
+<script>
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = this.querySelector('i');
+
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x');
+        } else {
+            menu.classList.add('hidden');
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+        }
+    });
+</script>
 
 {% block javascripts %}{% endblock %}
 </body>

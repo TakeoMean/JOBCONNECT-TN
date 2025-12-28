@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-100 py-20">
+
+    <div class="bg-white shadow-xl rounded-2xl p-12 text-center w-full max-w-lg">
+
+        <h1 class="text-4xl font-extrabold text-green-700 mb-6">
+            Paiement accepté
+        </h1>
+
+        <p class="text-xl text-gray-700 mb-8">
+            Votre abonnement <strong>{{ plan|upper }}</strong> est maintenant actif ! 🎉
+        </p>
+
+        {% if type == 'candidat' %}
+            <a href="{{ path('candidate_dashboard') }}" class="bg-green-600 text-white px-10 py-3 rounded-full text-xl font-bold hover:bg-green-700 transition-all duration-300">
+                Aller au tableau de bord
+            </a>
+        {% else %}
+            <a href="{{ path('recruiter_dashboard') }}" class="bg-green-600 text-white px-10 py-3 rounded-full text-xl font-bold hover:bg-green-700 transition-all duration-300">
+                Aller au tableau de bord
+            </a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

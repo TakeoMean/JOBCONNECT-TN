@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Test pour la Candidature{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto my-12 bg-white p-8 shadow-xl rounded-xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-purple-600">Créer un test pour la candidature de {{ application.candidate.fullName }}</h1>
+
+    {{ form_start(form, {'attr': {'class':'space-y-6'}}) }}
+
+    <div class="mb-6">
+        {{ form_row(form.title, {'attr': {'class': 'w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-500'}}) }}
+    </div>
+
+    <div class="mb-6">
+        {{ form_row(form.duration, {'attr': {'class': 'w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-500'}}) }}
+    </div>
+
+    <div class="mb-6">
+        {{ form_row(form.minScore, {'attr': {'class': 'w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-500'}}) }}
+    </div>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4 text-purple-600">Questions</h2>
+    <div data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}" id="questions-wrapper" class="space-y-6">
+        {% for question in form.questions %}
+        <div class="border p-6 rounded-xl shadow-lg relative">
+            {{ form_row(question.question, {'attr': {'class': 'w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-500'}}) }}
+
+            <h3 class="font-semibold mt-4 text-lg">Réponses</h3>
+            <div class="answers-wrapper space-y-4 mt-4">
+                {% for answer in question.answers %}
+                <div class="flex items-center space-x-4">
+                    {{ form_widget(answer.answer, {'attr': {'class': 'w-full px-4 py-2 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+                    {{ form_widget(answer.isCorrect) }}
+                    <button type="button" class="remove-answer text-red-600 hover:text-red-800">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="add-answer mt-4 bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition">
+                Ajouter une réponse
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="button" id="add-question" class="mt-6 bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-all duration-300">
+        Ajouter une question
+    </button>
+
+    <div class="mt-8 text-center">
+        <button type="submit" class="bg-purple-600 text-white px-8 py-4 rounded-full hover:bg-purple-700 transition-all duration-300">
+            Créer le test
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let questionWrapper = document.getElementById('questions-wrapper');
+        let addQuestionBtn = document.getElementById('add-question');
+
+        addQuestionBtn.addEventListener('click', () => {
+            let prototype = questionWrapper.dataset.prototype;
+            let index = questionWrapper.children.length;
+            let newForm = prototype.replace(/__name__/g, index);
+            let div = document.createElement('div');
+            div.classList.add('border', 'p-6', 'rounded-xl', 'shadow-lg', 'relative');
+            div.innerHTML = newForm;
+            questionWrapper.appendChild(div);
+            addAnswerListeners(div);
+        });
+
+        function addAnswerListeners(questionDiv) {
+            let addAnswerBtn = questionDiv.querySelector('.add-answer');
+            let answersWrapper = questionDiv.querySelector('.answers-wrapper');
+            addAnswerBtn.addEventListener('click', () => {
+                let prototype = answersWrapper.dataset.prototype;
+                let index = answersWrapper.children.length;
+                let newForm = prototype.replace(/__name__/g, index);
+                let div = document.createElement('div');
+                div.classList.add('flex', 'items-center', 'space-x-4');
+                div.innerHTML = newForm + '<button type="button" class="remove-answer text-red-600 hover:text-red-800">&times;</button>';
+                answersWrapper.appendChild(div);
+                removeAnswerListeners(div);
+            });
+        }
+
+        function removeAnswerListeners(div) {
+            let removeBtn = div.querySelector('.remove-answer');
+            removeBtn.addEventListener('click', () => {
+                div.remove();
+            });
+        }
+
+        document.querySelectorAll('.remove-answer').forEach(btn => {
+            btn.addEventListener('click', e => e.target.closest('div').remove());
+        });
+
+        document.querySelectorAll('#questions-wrapper > div').forEach(div => addAnswerListeners(div));
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use App\Repository\JobOfferRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Application;
+use App\Entity\Test;  // Import the Test entity
 
 #[ORM\Entity(repositoryClass: JobOfferRepository::class)]
 class JobOffer
@@ -41,12 +45,22 @@ class JobOffer
     #[ORM\JoinColumn(nullable: false)]
     private ?Recruiter $recruiter = null;
 
+    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Application::class, orphanRemoval: true)]
+    private Collection $applications;
+
+    #[ORM\OneToMany(mappedBy: 'jobOffer', targetEntity: Test::class, orphanRemoval: true)]
+    private Collection $tests;  // Add this relationship to the Test entity
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->applications = new ArrayCollection();
+        $this->tests = new ArrayCollection();  // Initialize the collection
     }
 
+    // --- Getters & Setters ---
     public function getId(): ?int { return $this->id; }
+
     public function getTitle(): ?string { return $this->title; }
     public function setTitle(string $title): self { $this->title = $title; return $this; }
 
@@ -59,14 +73,68 @@ class JobOffer
     public function getSalary(): ?int { return $this->salary; }
     public function setSalary(?int $salary): self { $this->salary = $salary; return $this; }
 
-    public function isRemote(): bool { return $this->isRemote; }
-    public function setRemote(bool $isRemote): self { $this->isRemote = $isRemote; return $this; }
+    public function getIsRemote(): bool { return $this->isRemote; }
+    public function setIsRemote(bool $isRemote): self { $this->isRemote = $isRemote; return $this; }
 
     public function getContractType(): string { return $this->contractType; }
     public function setContractType(string $type): self { $this->contractType = $type; return $this; }
 
+    public function isPublished(): bool { return $this->isPublished; }
+    public function setIsPublished(bool $isPublished): self { $this->isPublished = $isPublished; return $this; }
+
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
     public function getRecruiter(): ?Recruiter { return $this->recruiter; }
     public function setRecruiter(?Recruiter $recruiter): self { $this->recruiter = $recruiter; return $this; }
 
-    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection { return $this->applications; }
+
+    public function addApplication(Application $application): self
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setOffer($this);
+        }
+        return $this;
+    }
+
+    public function removeApplication(Application $application): self
+    {
+        if ($this->applications->removeElement($application)) {
+            if ($application->getOffer() === $this) {
+                $application->setOffer(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Test>
+     */
+    public function getTests(): Collection
+    {
+        return $this->tests;
+    }
+
+    public function addTest(Test $test): self
+    {
+        if (!$this->tests->contains($test)) {
+            $this->tests->add($test);
+            $test->setJobOffer($this);  // Assuming that the 'Test' entity has a 'jobOffer' property.
+        }
+        return $this;
+    }
+
+    public function removeTest(Test $test): self
+    {
+        if ($this->tests->removeElement($test)) {
+            if ($test->getJobOffer() === $this) {
+                $test->setJobOffer(null);  // Assuming the 'Test' entity has a 'jobOffer' property.
+            }
+        }
+        return $this;
+    }
 }

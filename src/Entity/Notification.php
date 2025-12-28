@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Candidate;
+use App\Entity\Recruiter;
+use App\Repository\NotificationRepository;
 use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
@@ -11,7 +13,7 @@ class Notification
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -24,12 +26,12 @@ class Notification
     private bool $isRead = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private ?DateTimeImmutable $createdAt = null;
+    private \DateTimeImmutable $createdAt;
 
-    #[ORM\ManyToOne(targetEntity: "App\Entity\Candidate", inversedBy: "notifications")]
+    #[ORM\ManyToOne(targetEntity: Candidate::class, inversedBy: 'notifications')]
     private ?Candidate $candidate = null;
 
-    #[ORM\ManyToOne(targetEntity: "App\Entity\Recruiter", inversedBy: "notifications")]
+    #[ORM\ManyToOne(targetEntity: Recruiter::class, inversedBy: 'notifications')]
     private ?Recruiter $recruiter = null;
 
     public function __construct()
@@ -37,7 +39,7 @@ class Notification
         $this->createdAt = new DateTimeImmutable();
     }
 
-    // --- Getters & Setters ---
+    // --- Getters and Setters ---
     public function getId(): ?int { return $this->id; }
 
     public function getTitle(): ?string { return $this->title; }
@@ -49,7 +51,7 @@ class Notification
     public function getIsRead(): bool { return $this->isRead; }
     public function setIsRead(bool $isRead): self { $this->isRead = $isRead; return $this; }
 
-    public function getCreatedAt(): ?DateTimeImmutable { return $this->createdAt; }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 
     public function getCandidate(): ?Candidate { return $this->candidate; }
     public function setCandidate(?Candidate $candidate): self { $this->candidate = $candidate; return $this; }

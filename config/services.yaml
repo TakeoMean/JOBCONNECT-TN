@@ -7,17 +7,52 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Directories for file uploads
+    candidate_photo_directory: '%kernel.project_dir%/public/uploads/candidate/photo'
+    cv_directory: '%kernel.project_dir%/public/uploads/cv'
 
 services:
-    # default configuration for services in *this* file
+    # Default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # Makes classes in src/ available to be used as services
+    # This creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/'
+        resource: '../src/' # All classes in the src/ directory will be available as services.
+        exclude:  # Exclude specific files or folders (useful if you don't want all classes auto-registered as services)
+            - '../src/Entity'  # Entities are typically not services, unless specifically needed
+            - '../src/Repository'  # Repositories are usually handled differently, don't register them as services by default
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # You can add more service definitions when explicit configuration is needed
+    # For example, if you have a custom service:
+    # App\Service\CustomService:
+    #     arguments:
+    #         $someArgument: 'value'
+
+    # You can also configure specific services with custom arguments, if necessary:
+    # App\Service\SomeService:
+    #     arguments:
+    #         $fileDirectory: '%candidate_photo_directory%'
+
+    
+    # Default configuration for services
+    
+    App\Repository\UserRepository:
+        tags: ['doctrine.repository_service']
+
+    App\Repository\JobOfferRepository:
+        tags: ['doctrine.repository_service']
+
+    App\Repository\TestRepository:
+        tags: ['doctrine.repository_service']
+
+    App\Repository\NotificationRepository:
+        tags: ['doctrine.repository_service']
+
+    App\Repository\CandidateRepository:
+        tags: ['doctrine.repository_service']
+
+    App\Repository\RecruiterRepository:
+        tags: ['doctrine.repository_service']

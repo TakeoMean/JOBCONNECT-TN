@@ -26,12 +26,17 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     public function getId(): ?int { return $this->id; }
+
     public function getEmail(): ?string { return $this->email; }
     public function setEmail(string $email): static { $this->email = $email; return $this; }
 
     public function getUserIdentifier(): string { return (string)$this->email; }
 
-    public function getRoles(): array { return array_unique(array_merge($this->roles, ['ROLE_USER'])); }
+    public function getRoles(): array 
+    {
+        return array_unique(array_merge($this->roles, ['ROLE_USER']));
+    }
+
     public function setRoles(array $roles): static { $this->roles = $roles; return $this; }
 
     public function getPassword(): ?string { return $this->password; }

@@ -19,13 +19,18 @@ security:
                 check_path: app_login
                 username_parameter: email
                 password_parameter: password
-                success_handler: App\Security\LoginSuccessHandler
+                default_target_path: /offres
+                always_use_default_target_path: false
+
 
             logout:
                 path: app_logout
                 target: /
 
     access_control:
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/candidate/dashboard, roles: ROLE_CANDIDATE }
-        - { path: ^/recruiter/dashboard, roles: ROLE_RECRUITER }
+             - { path: ^/login, roles: PUBLIC_ACCESS }
+             - { path: ^/offres, roles: PUBLIC_ACCESS }
+             - { path: ^/offre/\d+/postuler, roles: ROLE_CANDIDATE }
+             - { path: ^/candidat, roles: ROLE_CANDIDATE }
+             - { path: ^/recruteur, roles: ROLE_RECRUITER }
+

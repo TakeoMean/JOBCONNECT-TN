@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-50 py-20">
+
+    <div class="bg-white shadow-xl rounded-2xl p-12 max-w-3xl w-full">
+
+        <!-- Page Title -->
+        <h1 class="text-4xl font-extrabold text-center text-blue-700 mb-10">
+            Créer une nouvelle offre d’emploi
+        </h1>
+
+        {{ form_start(form, { 'attr': { 'class': 'space-y-6' } }) }}
+
+        <!-- Title Input -->
+        <div>
+            {{ form_label(form.title, 'Titre', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.title, { 'attr': {'class': 'w-full border px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600'} }) }}
+        </div>
+
+        <!-- Description Input -->
+        <div>
+            {{ form_label(form.description, 'Description', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.description, { 'attr': {'class': 'w-full border px-4 py-3 rounded-xl h-32 focus:outline-none focus:ring-2 focus:ring-blue-600'} }) }}
+        </div>
+
+        <!-- Location Input -->
+        <div>
+            {{ form_label(form.location, 'Localisation', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.location, { 'attr': {'class': 'w-full border px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600'} }) }}
+        </div>
+
+        <!-- Salary Input -->
+        <div>
+            {{ form_label(form.salary, 'Salaire', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.salary, { 'attr': {'class': 'w-full border px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600'} }) }}
+        </div>
+
+        <!-- Contract Type Input -->
+        <div>
+            {{ form_label(form.contractType, 'Type de contrat', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.contractType, { 'attr': {'class': 'w-full border px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600'} }) }}
+        </div>
+
+        <!-- Remote Option -->
+        <div class="flex items-center space-x-4">
+            {{ form_label(form.isRemote, 'Remote / Télétravail', { 'label_attr': {'class': 'text-lg text-gray-700'} }) }}
+            {{ form_widget(form.isRemote, { 'attr': {'class': 'w-6 h-6'} }) }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+            class="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:bg-blue-700 text-white font-bold text-xl px-10 py-4 rounded-full transition duration-300">
+            Publier l’offre
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

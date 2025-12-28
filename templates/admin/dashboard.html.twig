@@ -1,17 +1,48 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block content_title %}
-    <h1 class="text-5xl font-black text-purple-600">Bienvenue dans l'admin JobConnect TN</h1>
+    <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+        Bienvenue dans l'admin JobConnect TN
+    </h1>
 {% endblock %}
 
 {% block main %}
-<div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
-    <h2 class="text-4xl font-bold mb-8">Tu es maintenant le BOSS ABSOLU de la plateforme</h2>
-    <p class="text-2xl text-gray-700">Utilise le menu à gauche pour tout gérer</p>
-    <div class="mt-12">
-        <a href="{{ path('joboffer_list') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-3xl px-20 py-10 rounded-full hover:shadow-2xl transition">
-            Retour au site
-        </a>
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-16 flex items-center justify-center">
+
+    <div class="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-4xl w-full">
+
+        <h2 class="text-4xl font-bold text-gray-800 mb-6">
+            Tu es maintenant le BOSS ABSOLU de la plateforme
+        </h2>
+
+        <p class="text-2xl text-gray-600 mb-12">
+            Utilise le menu à gauche pour tout gérer et superviser les opérations
+        </p>
+
+        <!-- Actions Section -->
+        <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+            
+            <a href="{{ path('joboffer_list') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-3xl px-12 py-6 rounded-full hover:shadow-xl transition transform hover:scale-105">
+                Gérer les offres
+            </a>
+
+            <a href="{{ path('recruiter_plans') }}" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-black text-3xl px-12 py-6 rounded-full hover:shadow-xl transition transform hover:scale-105">
+                Abonnements Recruteurs
+            </a>
+
+            <a href="{{ path('candidate_plans') }}" class="bg-gradient-to-r from-green-500 to-teal-500 text-white font-black text-3xl px-12 py-6 rounded-full hover:shadow-xl transition transform hover:scale-105">
+                Abonnements Candidats
+            </a>
+        </div>
+
+        <!-- Back to Site Button -->
+        <div class="mt-12">
+            <a href="{{ path('joboffer_list') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-3xl px-20 py-10 rounded-full hover:shadow-2xl transition transform hover:scale-110">
+                Retour au site
+            </a>
+        </div>
+
     </div>
+
 </div>
 {% endblock %}

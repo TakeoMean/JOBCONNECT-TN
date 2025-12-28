@@ -28,7 +28,16 @@ class Test
     #[ORM\JoinColumn(nullable: false)]
     private ?Recruiter $recruiter = null;
 
-    #[ORM\OneToMany(mappedBy: 'test', targetEntity: TestQuestion::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: JobOffer::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?JobOffer $jobOffer = null;
+
+    #[ORM\OneToMany(
+        mappedBy: 'test',
+        targetEntity: TestQuestion::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
     private Collection $questions;
 
     public function __construct()
@@ -36,32 +45,66 @@ class Test
         $this->questions = new ArrayCollection();
     }
 
+    // -------- GETTERS / SETTERS --------
+
     public function getId(): ?int { return $this->id; }
 
     public function getTitle(): ?string { return $this->title; }
-    public function setTitle(string $title): self { $this->title = $title; return $this; }
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
 
     public function getDuration(): int { return $this->duration; }
-    public function setDuration(int $duration): self { $this->duration = $duration; return $this; }
+    public function setDuration(int $duration): self
+    {
+        $this->duration = $duration;
+        return $this;
+    }
 
     public function getMinScore(): int { return $this->minScore; }
-    public function setMinScore(int $minScore): self { $this->minScore = $minScore; return $this; }
+    public function setMinScore(int $minScore): self
+    {
+        $this->minScore = $minScore;
+        return $this;
+    }
 
     public function getRecruiter(): ?Recruiter { return $this->recruiter; }
-    public function setRecruiter(?Recruiter $recruiter): self { $this->recruiter = $recruiter; return $this; }
-
-    public function getQuestions(): Collection { return $this->questions; }
-    public function addQuestion(TestQuestion $question): self { 
-        if (!$this->questions->contains($question)) { 
-            $this->questions->add($question); 
-            $question->setTest($this); 
-        } 
-        return $this; 
+    public function setRecruiter(?Recruiter $recruiter): self
+    {
+        $this->recruiter = $recruiter;
+        return $this;
     }
-    public function removeQuestion(TestQuestion $question): self { 
-        if ($this->questions->removeElement($question)) { 
-            if ($question->getTest() === $this) { $question->setTest(null); } 
-        } 
-        return $this; 
+
+    public function getJobOffer(): ?JobOffer { return $this->jobOffer; }
+    public function setJobOffer(?JobOffer $jobOffer): self
+    {
+        $this->jobOffer = $jobOffer;
+        return $this;
+    }
+
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(TestQuestion $question): self
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setTest($this);
+        }
+        return $this;
+    }
+
+    public function removeQuestion(TestQuestion $question): self
+    {
+        if ($this->questions->removeElement($question)) {
+            if ($question->getTest() === $this) {
+                $question->setTest(null);
+            }
+        }
+        return $this;
     }
 }

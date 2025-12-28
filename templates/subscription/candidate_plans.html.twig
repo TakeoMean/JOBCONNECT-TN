@@ -1,58 +1,76 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-20">
-    <h1 class="text-7xl font-black text-center mb-20 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-        Abonnements Candidats
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 to-pink-100 py-16">
+
+    <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">
+        Formules d’Abonnement – Candidats
     </h1>
 
-    <div class="grid md:grid-cols-3 gap-16 max-w-7xl mx-auto px-6">
-        <!-- Gratuit -->
-        <div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
-            <h2 class="text-5xl font-black">Gratuit</h2>
-            <p class="text-8xl font-black mt-8">0 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl">
-                <li>✅ 10 candidatures/mois</li>
-                <li>✅ Profil visible</li>
-                <li>❌ Badge Premium</li>
+    <p class="text-center text-lg text-gray-600 mb-16 max-w-2xl mx-auto">
+        Choisissez l’offre qui correspond à vos objectifs : plus de candidatures, plus de visibilité, et plus de chances d’être recruté.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+
+        {# Gratuit Plan #}
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-8 text-center transform transition-all duration-300 hover:scale-105">
+            <h2 class="text-2xl font-bold text-gray-700">Gratuit</h2>
+            <p class="text-4xl font-extrabold text-gray-900 mt-4">0 DT</p>
+
+            <ul class="mt-8 space-y-3 text-gray-600">
+                <li>10 candidatures / mois</li>
+                <li>Profil public classique</li>
+                <li>Support standard</li>
             </ul>
-            <button class="mt-16 bg-gray-600 text-white font-black text-3xl px-24 py-10 rounded-full">Actuel</button>
+
+            <button class="mt-10 bg-gray-400 text-white font-semibold text-lg px-10 py-3 rounded-full cursor-not-allowed">
+                Actuel
+            </button>
         </div>
 
-        <!-- Premium Candidat -->
-        <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl shadow-2xl p-12 text-center transform scale-110 relative">
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600 text-white px-12 py-4 rounded-full text-2xl font-black">
-                POPULAIRE
+        {# Premium Plan #}
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl shadow-xl p-10 text-center transform scale-105">
+            <div class="text-sm bg-white text-blue-700 px-4 py-1 rounded-full mx-auto w-fit font-bold mb-4">
+                Recommandé
             </div>
-            <h2 class="text-5xl font-black text-white">Premium</h2>
-            <p class="text-8xl font-black text-white mt-8">150 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl text-white">
-                <li>✅ Candidatures illimitées</li>
-                <li>✅ Profil en haut</li>
-                <li>✅ Badge Premium</li>
-                <li>✅ Accès tests</li>
+
+            <h2 class="text-2xl font-bold">Premium</h2>
+            <p class="text-4xl font-extrabold mt-4">149 DT / mois</p>
+
+            <ul class="mt-8 space-y-3 text-blue-50">
+                <li>Candidatures illimitées</li>
+                <li>Mise en avant du profil</li>
+                <li>Badge Premium</li>
+                <li>Conseils CV + optimisation</li>
+                <li>Support prioritaire</li>
             </ul>
-            <a href="{{ path('fake_payment', {'type': 'candidat', 'plan': 'premium'}) }}" 
-               class="mt-16 bg-white text-orange-600 font-black text-3xl px-24 py-10 rounded-full block">
+
+            <a href="{{ path('fake_payment', {'type': 'candidat', 'plan': 'premium'}) }}"
+               class="mt-10 bg-white text-blue-700 font-bold text-lg px-10 py-3 rounded-full block hover:bg-blue-50 transition">
                 Choisir
             </a>
         </div>
 
-        <!-- Premium+ Candidat -->
-        <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl shadow-2xl p-12 text-center text-white">
-            <h2 class="text-5xl font-black">Premium+</h2>
-            <p class="text-8xl font-black mt-8">290 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl">
-                <li>✅ Tout Premium</li>
-                <li>✅ Contact direct recruteurs</li>
-                <li>✅ Offres exclusives</li>
-                <li>✅ Badge VIP</li>
+        {# Premium Plus Plan #}
+        <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-2xl shadow-md p-8 text-center transform transition-all duration-300 hover:scale-105">
+            <h2 class="text-2xl font-bold">Premium +</h2>
+            <p class="text-4xl font-extrabold mt-4">269 DT / mois</p>
+
+            <ul class="mt-8 space-y-3 text-purple-100">
+                <li>Tous les avantages Premium</li>
+                <li>Visibilité maximale + badge VIP</li>
+                <li>Accès direct aux recruteurs</li>
+                <li>Alertes offres prioritaires</li>
+                <li>Coaching entretien</li>
             </ul>
-            <a href="{{ path('fake_payment', {'type': 'candidat', 'plan': 'premium_plus'}) }}" 
-               class="mt-16 bg-yellow-400 text-purple-900 font-black text-3xl px-24 py-10 rounded-full block">
+
+            <a href="{{ path('fake_payment', {'type': 'candidat', 'plan': 'premium_plus'}) }}"
+               class="mt-10 bg-yellow-400 text-purple-900 font-bold text-lg px-10 py-3 rounded-full block hover:bg-yellow-500 transition">
                 Choisir
             </a>
         </div>
+
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,384 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block title %}Créer un test{% endblock %}
+
+{% block body %}
+<div class="min-vh-100 py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <!-- HEADER -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-white mb-3">
+                Créer un nouveau test
+            </h1>
+            <p class="lead text-white-50">
+                Configurez votre test et ajoutez des questions pour évaluer les candidats
+            </p>
+        </div>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-body p-5">
+                {{ form_start(form) }}
+
+                <!-- TEST INFO -->
+                <div class="mb-5">
+                    <h2 class="h4 fw-bold text-dark mb-4 d-flex align-items-center">
+                        <i class="bi bi-file-earmark-text-fill text-primary me-2"></i>
+                        Informations du test
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form_row(form.title) }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form_row(form.duration) }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                {{ form_row(form.minScore) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUESTIONS -->
+                <div class="mb-5">
+                    <h2 class="h4 fw-bold text-dark mb-4 d-flex align-items-center">
+                        <i class="bi bi-question-circle-fill text-primary me-2"></i>
+                        Questions
+                    </h2>
+                    <p class="text-muted small mb-4">
+                        Ajoutez des questions, puis cliquez sur "Ajouter une réponse" pour les options. Cochez la case pour marquer la bonne réponse.
+                    </p>
+
+                    <div id="questions" class="vstack gap-4" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
+                    </div>
+
+                    <!-- ADD QUESTION -->
+                    <button type="button" id="add-question" class="btn btn-outline-primary btn-lg w-100 mt-4 border-2 border-dashed rounded-3">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Ajouter une question
+                    </button>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="d-flex justify-content-end gap-3 pt-4 border-top">
+                    <a href="{{ path('recruiter_dashboard') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg" onclick="return validateTestForm()">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Créer le test
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let questionIndex = 0;
+const questionsContainer = document.getElementById('questions');
+
+document.getElementById('add-question').addEventListener('click', () => {
+    const prototype = questionsContainer.dataset.prototype.replace(/__name__/g, questionIndex);
+    const questionCard = document.createElement('div');
+
+    questionCard.className = 'card bg-light rounded-3 border shadow-sm';
+    questionCard.innerHTML = `
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="h5 fw-semibold text-dark d-flex align-items-center">
+                    <i class="bi bi-question-circle text-primary me-2"></i>
+                    Question ${questionIndex + 1}
+                </h3>
+                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle remove-question">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            <div class="mb-4">
+                ${prototype}
+            </div>
+
+            <button type="button" class="btn btn-outline-secondary w-100 border-2 border-dashed rounded-3 add-answer">
+                <i class="bi bi-plus me-2"></i>
+                Ajouter une réponse
+            </button>
+        </div>
+    `;
+
+    questionsContainer.appendChild(questionCard);
+    questionIndex++;
+
+    // Add placeholder to question input
+    const questionInput = questionCard.querySelector('input[type="text"], textarea');
+    if (questionInput) {
+        questionInput.placeholder = 'Entrez votre question ici';
+        // The form type already has Bootstrap classes
+    }
+
+    questionCard.querySelector('.remove-question').onclick = () => {
+        questionCard.remove();
+        updateQuestionNumbers();
+    };
+
+    setupAnswers(questionCard);
+});
+
+function updateQuestionNumbers() {
+    const questionCards = questionsContainer.querySelectorAll('.card');
+    questionCards.forEach((card, index) => {
+        const title = card.querySelector('h3');
+        title.innerHTML = `
+            <i class="bi bi-question-circle text-primary me-2"></i>
+            Question ${index + 1}
+        `;
+    });
+}
+
+function setupAnswers(questionCard) {
+    const answersContainer = questionCard.querySelector('[data-prototype]');
+    let answerIndex = answersContainer ? answersContainer.children.length : 0;
+
+    const addAnswerBtn = questionCard.querySelector('.add-answer');
+
+    addAnswerBtn.addEventListener('click', () => {
+        if (!answersContainer) return;
+    const proto = answersContainer.dataset.prototype.replace(/__answer__/g, answerIndex);
+        const wrapper = document.createElement('div');
+
+        wrapper.className = 'd-flex align-items-center gap-3 bg-white border rounded-3 p-3 shadow-sm answer-wrapper';
+        wrapper.innerHTML = `
+            ${proto}
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle remove-answer">
+                <i class="bi bi-x"></i>
+            </button>
+        `;
+
+        answersContainer.appendChild(wrapper);
+        answerIndex++;
+
+        // Set checkbox name based on text input name
+        const textInput = wrapper.querySelector('input[type="text"]');
+        if (textInput) {
+            const textName = textInput.name;
+            const checkboxName = textName.replace('[answer]', '[isCorrect]');
+            const checkbox = wrapper.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.name = checkboxName;
+            }
+            // The form type already has Bootstrap classes and placeholder
+            textInput.placeholder = 'Entrez une option de réponse';
+        }
+
+        wrapper.querySelector('.remove-answer').onclick = () => wrapper.remove();
+
+        // Handle correct answer checkbox
+        const checkbox = wrapper.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.addEventListener('change', () => handleCorrectAnswer(checkbox));
+        }
+    });
+}
+
+function handleCorrectAnswer(checkbox) {
+    const questionCard = checkbox.closest('.card');
+    const checkboxes = questionCard.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        if (cb !== checkbox) cb.checked = false;
+    });
+}
+
+// Initialize with one question if none exist
+if (questionsContainer.children.length === 0) {
+    document.getElementById('add-question').click();
+}
+
+function validateTestForm() {
+    // Reset previous validation states
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.valid-feedback, .invalid-feedback').forEach(el => el.remove());
+
+    const questionCards = questionsContainer.querySelectorAll('.card');
+    let isValid = true;
+    let errorMessages = [];
+
+    if (questionCards.length === 0) {
+        errorMessages.push('Veuillez ajouter au moins une question.');
+        isValid = false;
+    }
+
+    questionCards.forEach((card, index) => {
+        const questionNumber = index + 1;
+        const questionInput = card.querySelector('input[type="text"], textarea');
+        const answersContainer = card.querySelector('[data-prototype]');
+        const answers = answersContainer ? answersContainer.querySelectorAll('.answer-wrapper') : [];
+        const checkboxes = card.querySelectorAll('input[type="checkbox"]:checked');
+
+        // Check if question text is filled
+        if (!questionInput || !questionInput.value.trim()) {
+            questionInput.classList.add('is-invalid');
+            addValidationFeedback(questionInput, 'Le texte de la question est requis.');
+            errorMessages.push(`Question ${questionNumber}: Le texte de la question est requis.`);
+            isValid = false;
+        }
+
+        // Check if at least 2 answers
+        if (answers.length < 2) {
+            // Highlight the add answer button
+            const addBtn = card.querySelector('.add-answer');
+            addBtn.classList.add('is-invalid');
+            addValidationFeedback(addBtn, 'Au moins 2 réponses requises.');
+            errorMessages.push(`Question ${questionNumber}: Au moins 2 réponses sont requises.`);
+            isValid = false;
+        }
+
+        // Check if exactly one correct answer is selected
+        if (checkboxes.length !== 1) {
+            // Highlight all checkboxes in this question
+            const allCheckboxes = card.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(cb => {
+                cb.classList.add('is-invalid');
+                addValidationFeedback(cb, 'Une réponse correcte requise.');
+            });
+            errorMessages.push(`Question ${questionNumber}: Exactement une réponse doit être marquée comme correcte.`);
+            isValid = false;
+        }
+
+        // Check if all answers have text
+        answers.forEach((answer, answerIndex) => {
+            const answerInput = answer.querySelector('input[type="text"]');
+            if (!answerInput || !answerInput.value.trim()) {
+                answerInput.classList.add('is-invalid');
+                addValidationFeedback(answerInput, 'Le texte de la réponse est requis.');
+                errorMessages.push(`Question ${questionNumber}, Réponse ${answerIndex + 1}: Le texte de la réponse est requis.`);
+                isValid = false;
+            }
+        });
+    });
+
+    if (!isValid) {
+        // Show summary alert
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+        alertDiv.innerHTML = `
+            <strong>Erreurs de validation:</strong>
+            <ul class="mb-0 mt-2">
+                ${errorMessages.map(msg => `<li>${msg}</li>`).join('')}
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 10000);
+    }
+
+    return isValid;
+}
+
+function addValidationFeedback(element, message) {
+    const feedback = document.createElement('div');
+    feedback.className = 'invalid-feedback';
+    feedback.textContent = message;
+    element.parentNode.appendChild(feedback);
+}
+</script>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* Form field focus effects */
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Checkbox styling */
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Hide labels in answer wrappers */
+.answer-wrapper label:not(.form-check-label) {
+    display: none;
+}
+
+.answer-wrapper .form-check-input {
+    margin-right: 0.75rem;
+}
+
+.answer-wrapper .form-check {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Dashed border for add buttons */
+.border-dashed {
+    border-style: dashed !important;
+}
+
+/* Card hover effects */
+.card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Validation styles */
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.btn.is-invalid {
+    border-color: #dc3545 !important;
+    color: #dc3545 !important;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+</style>
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% endblock %}

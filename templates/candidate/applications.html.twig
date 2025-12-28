@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes candidatures{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12">
+    <div class="max-w-5xl mx-auto px-6">
+
+        <!-- HEADER -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+                <i class="bi bi-file-earmark-text mr-4"></i>
+                Mes Candidatures
+            </h1>
+            <p class="text-xl text-gray-600">
+                Suivez l'état de vos candidatures et passez vos tests
+            </p>
+        </div>
+
+        <!-- NO APPLICATIONS -->
+        {% if applications is empty %}
+            <div class="bg-white p-12 rounded-2xl shadow-2xl text-center">
+                <i class="bi bi-inbox text-8xl text-gray-300 mb-6"></i>
+                <p class="text-gray-500 text-xl mb-6">
+                    Vous n'avez encore envoyé aucune candidature.
+                </p>
+                <p class="text-gray-400 text-lg mb-8">
+                    Découvrez les offres disponibles et postulez !
+                </p>
+                <a href="{{ path('joboffer_list') }}"
+                   class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                    <i class="bi bi-search mr-2"></i>
+                    Voir les offres
+                </a>
+            </div>
+        {% else %}
+            <!-- APPLICATIONS LIST -->
+            <div class="space-y-6">
+                {% for app in applications %}
+                    <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100">
+
+                        <!-- APPLICATION HEADER -->
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                                    <i class="bi bi-briefcase text-blue-600 mr-3"></i>
+                                    {{ app.offer.title }}
+                                </h2>
+                                <p class="text-gray-600 flex items-center">
+                                    <i class="bi bi-calendar-event mr-2"></i>
+                                    Candidature envoyée le {{ app.appliedAt|date('d/m/Y à H:i') }}
+                                </p>
+                            </div>
+
+                            <!-- STATUS BADGE -->
+                            <div class="ml-6">
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold
+                                    {% if app.status == 'Hired' %}
+                                        bg-blue-100 text-blue-800
+                                    {% elseif app.status == 'Accepted' %}
+                                        bg-green-100 text-green-800
+                                    {% elseif app.status == 'Refused' %}
+                                        bg-red-100 text-red-800
+                                    {% else %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% endif %}">
+                                    <i class="bi bi-circle-fill mr-2 text-xs"></i>
+                                    {% if app.status == 'Hired' %}
+                                        Embauché
+                                    {% elseif app.status == 'Accepted' %}
+                                        Accepté
+                                    {% elseif app.status == 'Refused' %}
+                                        Refusé
+                                    {% else %}
+                                        En attente
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- APPLICATION DETAILS -->
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                    <i class="bi bi-building mr-2 text-gray-600"></i>
+                                    Entreprise
+                                </h3>
+                                <p class="text-gray-700">{{ app.offer.recruiter.companyName }}</p>
+                            </div>
+
+                            {% if app.testScore is not null %}
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                        <i class="bi bi-trophy mr-2 text-yellow-600"></i>
+                                        Score du test
+                                    </h3>
+                                    <p class="text-2xl font-bold
+                                        {% if app.testScore >= app.assignedTest.minScore %}
+                                            text-green-600
+                                        {% else %}
+                                            text-red-600
+                                        {% endif %}">
+                                        {{ app.testScore }}%
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Minimum requis: {{ app.assignedTest.minScore }}%
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="flex justify-end">
+                            {% if app.status == 'Accepted' and app.assignedTest is not null %}
+                                <a href="{{ path('candidate_take_test', {id: app.id}) }}"
+                                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                                    <i class="bi bi-play-circle-fill mr-2"></i>
+                                    Passer le test
+                                </a>
+                            {% elseif app.status == 'Accepted' and app.assignedTest is null %}
+                                <div class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg">
+                                    <i class="bi bi-clock mr-2"></i>
+                                    En attente d'un test
+                                </div>
+                            {% elseif app.status == 'Hired' %}
+                                <div class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold">
+                                    <i class="bi bi-check-circle-fill mr-2"></i>
+                                    Félicitations ! Vous êtes embauché
+                                </div>
+                            {% elseif app.status == 'Refused' %}
+                                <div class="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 rounded-lg">
+                                    <i class="bi bi-x-circle mr-2"></i>
+                                    Candidature refusée
+                                </div>
+                            {% else %}
+                                <div class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+                                    <i class="bi bi-hourglass mr-2"></i>
+                                    En cours d'examen
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

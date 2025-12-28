@@ -1,5 +1,5 @@
 <?php
-// src/Controller/SecurityController.php
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,22 +9,28 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    // ------------------- Login Page -------------------
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // Get the last authentication error (if any)
         $error = $authenticationUtils->getLastAuthenticationError();
+
+        // Get the last entered username (if any)
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // Render login template with last username and error if applicable
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
     }
 
+    // ------------------- Logout -------------------
     #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
-        // Cette méthode ne sera jamais appelée car interceptée par le firewall
-        throw new \Exception('Ne sera jamais atteint');
+        // This method is intercepted by the firewall, so it will never be called
+        throw new \Exception('This should never be reached!');
     }
 }

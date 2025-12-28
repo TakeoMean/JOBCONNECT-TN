@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block title %}Passer le test{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+                <i class="bi bi-clipboard-check mr-3 text-blue-600"></i>
+                Test de recrutement
+            </h1>
+            <p class="text-lg text-gray-600">
+                Répondez aux questions suivantes pour compléter votre candidature
+            </p>
+        </div>
+
+        <!-- TIMER AND PROGRESS -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="bi bi-clock text-red-500 mr-2"></i>
+                    <span class="text-lg font-semibold text-gray-800">Temps restant: <span id="timer" class="text-red-500">00:00</span></span>
+                </div>
+                <div class="flex items-center">
+                    <i class="bi bi-bar-chart text-blue-500 mr-2"></i>
+                    <span class="text-lg font-semibold text-gray-800">Progression: <span id="progress-text" class="text-blue-500">0/{{ questions|length }}</span></span>
+                </div>
+            </div>
+            <div class="mt-4 bg-gray-200 rounded-full h-3">
+                <div id="progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <form id="test-form" method="post" class="space-y-6">
+
+                    {% for question in questions %}
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                                    {{ loop.index }}
+                                </span>
+                                {{ question.question }}
+                                <small class="text-gray-500 ml-auto">{{ question.answers|length }} réponse(s)</small>
+                            </h2>
+
+                            <div class="space-y-3">
+                                {% for answer in question.answers %}
+                                    <div class="bg-white p-4 rounded-lg border border-gray-300 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer">
+                                        <label class="flex items-center cursor-pointer w-full">
+                                            <input
+                                                class="mr-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                                                type="radio"
+                                                name="question_{{ question.id }}"
+                                                value="{{ answer.id }}"
+                                                id="answer_{{ question.id }}_{{ loop.index }}"
+                                                required
+                                            >
+                                            <span class="text-gray-700 font-medium">{{ answer.answer }}</span>
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                        <i class="bi bi-exclamation-triangle text-yellow-500 mr-2"></i>
+                                        Aucune réponse disponible pour cette question.
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="pt-6 border-t border-gray-200">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                            <i class="bi bi-send mr-2"></i>
+                            Soumettre le test
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="_token" value="{{ csrf_token('take_test') }}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Timer
+let duration = {{ test.duration * 60 }}; // Convert minutes to seconds
+let timerElement = document.getElementById('timer');
+let form = document.getElementById('test-form');
+
+function updateTimer() {
+    let minutes = Math.floor(duration / 60);
+    let seconds = duration % 60;
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (duration <= 0) {
+        form.submit();
+    } else {
+        duration--;
+        setTimeout(updateTimer, 1000);
+    }
+}
+
+// Progress
+let totalQuestions = {{ questions|length }};
+let progressText = document.getElementById('progress-text');
+let progressBar = document.getElementById('progress-bar');
+
+function updateProgress() {
+    let answered = document.querySelectorAll('input[type="radio"]:checked').length;
+    progressText.textContent = `${answered}/${totalQuestions}`;
+    progressBar.style.width = `${(answered / totalQuestions) * 100}%`;
+}
+
+// Prevent leaving
+function beforeUnloadHandler(e) {
+    e.preventDefault();
+    e.returnValue = 'Êtes-vous sûr de vouloir quitter le test ? Votre progression sera perdue.';
+}
+window.addEventListener('beforeunload', beforeUnloadHandler);
+
+// Remove prevent leaving on form submit
+form.addEventListener('submit', function() {
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
+});
+
+// Event listeners
+document.addEventListener('change', updateProgress);
+
+// Initialize
+updateTimer();
+updateProgress();
+</script>
+
+{% endblock %}

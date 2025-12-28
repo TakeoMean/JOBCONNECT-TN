@@ -1,58 +1,94 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-20">
-    <h1 class="text-7xl font-black text-center mb-20 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 to-pink-100 py-16">
+
+    <h1 class="text-4xl font-extrabold text-center mb-12 text-gray-800">
         Abonnements Recruteurs
     </h1>
 
-    <div class="grid md:grid-cols-3 gap-16 max-w-7xl mx-auto px-6">
-        <!-- Gratuit -->
-        <div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
-            <h2 class="text-5xl font-black">Gratuit</h2>
-            <p class="text-8xl font-black mt-8">0 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl">
-                <li>✅ 3 offres/mois</li>
-                <li>✅ Profil entreprise</li>
-                <li>❌ Mise en avant</li>
+    <p class="text-center text-lg text-gray-600 mb-16 max-w-2xl mx-auto">
+        Choisissez l'offre qui correspond à vos besoins : plus d'offres, plus de visibilité, et plus de moyens pour réussir vos recrutements.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+
+        <!-- Gratuit Plan -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-8 text-center transform transition-all duration-300 hover:scale-105">
+            <h2 class="text-2xl font-bold text-gray-700">Gratuit</h2>
+            <p class="text-4xl font-extrabold text-gray-900 mt-4">0 DT</p>
+
+            <ul class="mt-8 space-y-3 text-gray-600">
+                <li>3 offres / mois</li>
+                <li>Profil entreprise classique</li>
+                <li>Support standard</li>
             </ul>
-            <button class="mt-16 bg-gray-600 text-white font-black text-3xl px-24 py-10 rounded-full">Actuel</button>
+
+            {% if app.user.getSubscription()|default('free') == 'free' %}
+                <button class="mt-10 bg-gray-400 text-white font-semibold text-lg px-10 py-3 rounded-full cursor-not-allowed">
+                    Actuel
+                </button>
+            {% else %}
+                <button class="mt-10 bg-gray-400 text-white font-semibold text-lg px-10 py-3 rounded-full cursor-not-allowed">
+                    Déjà souscrit
+                </button>
+            {% endif %}
         </div>
 
-        <!-- Pro Recruteur -->
-        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-2xl p-12 text-center transform scale-110 relative text-white">
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-12 py-4 rounded-full text-2xl font-black">
-                RECOMMANDÉ
+        <!-- Pro Plan -->
+        <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-2xl shadow-xl p-10 text-center transform scale-105">
+            <div class="text-sm bg-white text-purple-700 px-4 py-1 rounded-full mx-auto w-fit font-bold mb-4">
+                Recommandé
             </div>
-            <h2 class="text-5xl font-black">Pro</h2>
-            <p class="text-8xl font-black mt-8">490 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl">
-                <li>✅ Offres illimitées</li>
-                <li>✅ Mise en avant</li>
-                <li>✅ Tests personnalisés</li>
-                <li>✅ Statistiques</li>
+
+            <h2 class="text-2xl font-bold">Pro</h2>
+            <p class="text-4xl font-extrabold mt-4">490 DT / mois</p>
+
+            <ul class="mt-8 space-y-3 text-purple-100">
+                <li>Offres illimitées</li>
+                <li>Mise en avant des offres</li>
+                <li>Tests personnalisés</li>
+                <li>Statistiques détaillées</li>
+                <li>Support prioritaire</li>
             </ul>
-            <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'pro'}) }}" 
-               class="mt-16 bg-yellow-400 text-purple-900 font-black text-3xl px-24 py-10 rounded-full block">
-                Choisir Pro
-            </a>
+
+            {% if app.user.getSubscription()|default('free') == 'pro' %}
+                <button class="mt-10 bg-green-500 text-white font-bold text-lg px-10 py-3 rounded-full cursor-not-allowed">
+                    Plan Actuel
+                </button>
+            {% else %}
+                <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'pro'}) }}"
+                   class="mt-10 bg-white text-purple-700 font-bold text-lg px-10 py-3 rounded-full block hover:bg-purple-50 transition">
+                    Choisir
+                </a>
+            {% endif %}
         </div>
 
-        <!-- Enterprise -->
-        <div class="bg-gradient-to-br from-black to-gray-800 rounded-3xl shadow-2xl p-12 text-center text-white">
-            <h2 class="text-5xl font-black">Enterprise</h2>
-            <p class="text-8xl font-black mt-8">990 DT</p>
-            <ul class="mt-12 space-y-6 text-2xl">
-                <li>✅ Tout Pro</li>
-                <li>✅ Recrutement dédié</li>
-                <li>✅ Support VIP</li>
-                <li>✅ API accès</li>
+        <!-- Enterprise Plan -->
+        <div class="bg-gradient-to-r from-gray-800 to-black text-white rounded-2xl shadow-md p-8 text-center transform transition-all duration-300 hover:scale-105">
+            <h2 class="text-2xl font-bold">Enterprise</h2>
+            <p class="text-4xl font-extrabold mt-4">990 DT / mois</p>
+
+            <ul class="mt-8 space-y-3 text-gray-300">
+                <li>Tous les avantages du Pro</li>
+                <li>Recrutement dédié</li>
+                <li>Support VIP 24/7</li>
+                <li>Accès API complet</li>
+                <li>Formation équipe</li>
             </ul>
-            <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'enterprise'}) }}" 
-               class="mt-16 bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-black text-3xl px-24 py-10 rounded-full block">
-                Choisir Enterprise
-            </a>
+
+            {% if app.user.getSubscription()|default('free') == 'enterprise' %}
+                <button class="mt-10 bg-green-500 text-white font-bold text-lg px-10 py-3 rounded-full cursor-not-allowed">
+                    Plan Actuel
+                </button>
+            {% else %}
+                <a href="{{ path('fake_payment', {'type': 'recruteur', 'plan': 'enterprise'}) }}"
+                   class="mt-10 bg-yellow-400 text-gray-900 font-bold text-lg px-10 py-3 rounded-full block hover:bg-yellow-500 transition">
+                    Choisir
+                </a>
+            {% endif %}
         </div>
+
     </div>
 </div>
 {% endblock %}

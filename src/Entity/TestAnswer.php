@@ -26,11 +26,23 @@ class TestAnswer
     public function getId(): ?int { return $this->id; }
 
     public function getAnswer(): ?string { return $this->answer; }
-    public function setAnswer(string $answer): self { $this->answer = $answer; return $this; }
+    public function setAnswer(string $answer): self
+    {
+        $this->answer = $answer;
+        return $this;
+    }
 
     public function isCorrect(): bool { return $this->isCorrect; }
-    public function setIsCorrect(bool $isCorrect): self { $this->isCorrect = $isCorrect; return $this; }
+    public function setIsCorrect(bool $isCorrect): self
+    {
+        $this->isCorrect = $isCorrect;
+        return $this;
+    }
 
     public function getQuestion(): ?TestQuestion { return $this->question; }
-    public function setQuestion(?TestQuestion $question): self { $this->question = $question; return $this; }
+    public function setQuestion(?TestQuestion $question): self
+    {
+        $this->question = $question;
+        return $this;
+    }
 }

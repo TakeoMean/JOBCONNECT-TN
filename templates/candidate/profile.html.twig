@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <!-- HEADER -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+                <i class="bi bi-person-circle mr-4"></i>
+                Mon Profil
+            </h1>
+            <p class="text-xl text-gray-600">
+                Gérez vos informations personnelles et professionnelles
+            </p>
+        </div>
+
+        <!-- PROFILE CARD -->
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            <!-- PROFILE HEADER -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="relative">
+                        {% if app.user.photo %}
+                            <img src="{{ asset('uploads/candidate/photo/' ~ app.user.photo) }}"
+                                 class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                        {% else %}
+                            <div class="w-32 h-32 rounded-full bg-white flex items-center justify-center border-4 border-white shadow-lg">
+                                <i class="bi bi-person-fill text-6xl text-gray-400"></i>
+                            </div>
+                        {% endif %}
+                        <div class="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center">
+                            <i class="bi bi-check-circle-fill text-white text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h1 class="text-4xl font-extrabold mb-2">{{ app.user.fullName }}</h1>
+                        <p class="text-xl opacity-90 mb-1">{{ app.user.email }}</p>
+                        <p class="text-lg opacity-80 flex items-center justify-center md:justify-start">
+                            <i class="bi bi-geo-alt mr-2"></i>
+                            {{ app.user.city ?: 'Ville non spécifiée' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE DETAILS -->
+            <div class="p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-info-circle text-blue-600 mr-3"></i>
+                    Informations Personnelles
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-8">
+
+                    <!-- PHONE -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <i class="bi bi-telephone-fill text-green-600 mr-3 text-xl"></i>
+                            <h3 class="font-bold text-lg text-gray-800">Téléphone</h3>
+                        </div>
+                        <p class="text-gray-700 text-xl font-medium">{{ app.user.phone ?: 'Non spécifié' }}</p>
+                    </div>
+
+                    <!-- CV -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <i class="bi bi-file-earmark-text-fill text-blue-600 mr-3 text-xl"></i>
+                            <h3 class="font-bold text-lg text-gray-800">CV</h3>
+                        </div>
+                        {% if app.user.cvPath %}
+                            <a href="{{ asset('uploads/cv/' ~ app.user.cvPath) }}"
+                               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                               target="_blank">
+                                <i class="bi bi-download mr-2"></i>
+                                Télécharger le CV
+                            </a>
+                        {% else %}
+                            <div class="flex items-center text-gray-500">
+                                <i class="bi bi-dash-circle mr-2"></i>
+                                <span>Aucun CV disponible</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- SKILLS -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <i class="bi bi-star-fill text-yellow-600 mr-3 text-xl"></i>
+                            <h3 class="font-bold text-lg text-gray-800">Compétences</h3>
+                        </div>
+                        <p class="text-gray-700 text-lg">À venir - Mise à jour du profil en cours</p>
+                    </div>
+
+                </div>
+
+                <!-- STATS SECTION -->
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="bi bi-bar-chart text-green-600 mr-3"></i>
+                        Statistiques
+                    </h2>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl text-white text-center">
+                            <i class="bi bi-send-check text-3xl mb-2 opacity-80"></i>
+                            <div class="text-3xl font-bold">{{ app.user.applications|length }}</div>
+                            <div class="text-sm opacity-90">Candidatures envoyées</div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-xl text-white text-center">
+                            <i class="bi bi-check-circle text-3xl mb-2 opacity-80"></i>
+                            <div class="text-3xl font-bold">{{ app.user.applications|filter(app => app.status == 'Accepted' or app.status == 'Hired')|length }}</div>
+                            <div class="text-sm opacity-90">Candidatures acceptées</div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-xl text-white text-center">
+                            <i class="bi bi-trophy text-3xl mb-2 opacity-80"></i>
+                            <div class="text-3xl font-bold">{{ app.user.applications|filter(app => app.testScore is not null)|length }}</div>
+                            <div class="text-sm opacity-90">Tests passés</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,71 +2,101 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class SubscriptionController extends AbstractController
 {
-    #[Route('/abonnement/candidat', name: 'candidate_subscription')]
+    // ------------------- Display Candidate Subscription Plans -------------------
+    #[Route('/abonnement/candidat', name: 'candidate_plans')]
+    #[IsGranted('ROLE_CANDIDATE')]
     public function candidatePlans(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_CANDIDATE');
         return $this->render('subscription/candidate_plans.html.twig');
     }
 
-    #[Route('/abonnement/recruteur', name: 'recruiter_subscription')]
+    // ------------------- Display Recruiter Subscription Plans -------------------
+    #[Route('/abonnement/recruteur', name: 'recruiter_plans')]
+    #[IsGranted('ROLE_RECRUITER')]
     public function recruiterPlans(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_RECRUITER');
         return $this->render('subscription/recruiter_plans.html.twig');
     }
 
+    // ------------------- Fake Payment Form -------------------
     #[Route('/paiement/{type}/{plan}', name: 'fake_payment')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function payment(string $type, string $plan): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        return $this->render('subscription/payment.html.twig', [
-            'type' => $type,
-            'plan' => $plan,
-            'price' => $type === 'candidat'
-                ? ($plan === 'premium' ? 150 : 290)
-                : ($plan === 'pro' ? 490 : 990),
-        ]);
-    }
-
-    #[Route('/paiement/success/{type}/{plan}', name: 'subscription_success')]
-    public function success(string $type, string $plan, EntityManagerInterface $em): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $plans = [
+        // Allowed plans for candidates and recruiters
+        $allowed = [
             'candidat' => ['premium', 'premium_plus'],
             'recruteur' => ['pro', 'enterprise'],
         ];
 
-        if (!isset($plans[$type]) || !in_array($plan, $plans[$type], true)) {
-            throw $this->createNotFoundException('Plan invalide');
+        // Check if the type and plan are valid
+        if (!isset($allowed[$type]) || !in_array($plan, $allowed[$type], true)) {
+            throw $this->createNotFoundException("Plan invalide");
+        }
+
+        // Set price based on the selected plan
+        $price = match ($type) {
+            'candidat' => ($plan === 'premium' ? 150 : 290),
+            'recruteur' => ($plan === 'pro' ? 490 : 990),
+            default => 0,
+        };
+
+        return $this->render('subscription/payment.html.twig', [
+            'type' => $type,
+            'plan' => $plan,
+            'price' => $price,
+        ]);
+    }
+
+    // ------------------- Validate Payment and Update Database -------------------
+    #[Route('/paiement/validation/{type}/{plan}', name: 'payment_validate', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function validatePayment(string $type, string $plan, EntityManagerInterface $em): Response
+    {
+        // Allowed plans for candidates and recruiters
+        $allowed = [
+            'candidat' => ['premium', 'premium_plus'],
+            'recruteur' => ['pro', 'enterprise'],
+        ];
+
+        // Check if the type and plan are valid
+        if (!isset($allowed[$type]) || !in_array($plan, $allowed[$type], true)) {
+            throw $this->createNotFoundException("Plan invalide");
         }
 
         $user = $this->getUser();
 
+        // Update user subscription details
         $user->setSubscription($plan);
-        $user->setSubscriptionEndsAt(
-            (new \DateTimeImmutable())->modify('+30 days')
-        );
+        $expiry = new \DateTimeImmutable('+30 days');
+        $user->setSubscriptionEndsAt($expiry);
 
+        // Persist changes to the database
         $em->flush();
 
-        $this->addFlash('success', 'Abonnement activé avec succès !');
+        // Redirect to success page
+        return $this->redirectToRoute('payment_success', [
+            'type' => $type,
+            'plan' => $plan,
+        ]);
+    }
 
-        // Redirect based on role
-        return $this->redirectToRoute(
-            in_array('ROLE_RECRUITER', $user->getRoles(), true)
-                ? 'recruiter_dashboard'
-                : 'candidate_dashboard'
-        );
+    // ------------------- Payment Success Page -------------------
+    #[Route('/paiement/success/{type}/{plan}', name: 'payment_success')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function success(string $type, string $plan): Response
+    {
+        return $this->render('subscription/success.html.twig', [
+            'type' => $type,
+            'plan' => $plan,
+        ]);
     }
 }

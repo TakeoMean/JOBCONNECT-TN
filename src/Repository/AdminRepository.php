@@ -33,28 +33,78 @@ class AdminRepository extends ServiceEntityRepository implements PasswordUpgrade
         $this->getEntityManager()->flush();
     }
 
-    //    /**
-    //     * @return Admin[] Returns an array of Admin objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Find an admin by their email address.
+     *
+     * @param string $email The email address to search for.
+     * @return Admin|null Returns an Admin entity or null if not found.
+     */
+    public function findOneByEmail(string $email): ?Admin
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Admin
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Find all admins with a certain role.
+     *
+     * @param string $role The role to search for.
+     * @return Admin[] Returns an array of Admin objects.
+     */
+    public function findAllByRole(string $role): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.roles LIKE :role')
+            ->setParameter('role', '%"' . $role . '"%')
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find all admins ordered by their last login date.
+     *
+     * @return Admin[] Returns an array of Admin objects.
+     */
+    public function findAllOrderedByLastLogin(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.lastLogin', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find all admins who haven't logged in within a specific date range.
+     *
+     * @param \DateTimeInterface $startDate The start date for the search range.
+     * @param \DateTimeInterface $endDate The end date for the search range.
+     * @return Admin[] Returns an array of Admin objects.
+     */
+    public function findInactiveAdmins(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.lastLogin BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Example method to fetch admins based on a custom field or condition
+    /*
+    public function findByExampleField($value): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('a.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+    */
 }

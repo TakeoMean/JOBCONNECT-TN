@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\Notification;
+use App\Entity\Application;
 
 #[ORM\Entity(repositoryClass: CandidateRepository::class)]
 #[Vich\Uploadable]
@@ -35,10 +36,15 @@ class Candidate extends User
     #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Notification::class, orphanRemoval: true)]
     private Collection $notifications;
 
+    // --- Applications ---
+    #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Application::class, orphanRemoval: true)]
+    private Collection $applications;
+
     public function __construct()
     {
         parent::__construct();
         $this->notifications = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     // --- Photo methods ---
@@ -131,4 +137,34 @@ class Candidate extends User
         }
         return $this;
     }
+
+    // --- Applications methods ---
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): self
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setCandidate($this);
+        }
+        return $this;
+    }
+
+    public function removeApplication(Application $application): self
+    {
+        if ($this->applications->removeElement($application)) {
+            if ($application->getCandidate() === $this) {
+                $application->setCandidate(null);
+            }
+        }
+        return $this;
+    }
+
+    // --- Helper ---
 }
