@@ -16,13 +16,25 @@ use App\Entity\Notification;
 class Recruiter extends User
 {
     #[ORM\Column(length: 255)]
-    private ?string $companyName = null;
+    private ?string $organizationName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $responsiblePerson = null;
 
+    #[ORM\Column(length: 255)]
+    private string $sector = '';
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phoneNumber = null;
+
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $sector = null;
+    private ?string $website = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
+    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    private ?string $slug = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $address = null;
@@ -58,15 +70,28 @@ class Recruiter extends User
         $this->notifications = new ArrayCollection();
     }
 
+
     // --- Basic Info ---
-    public function getCompanyName(): ?string { return $this->companyName; }
-    public function setCompanyName(string $companyName): self { $this->companyName = $companyName; return $this; }
+    public function getOrganizationName(): ?string { return $this->organizationName; }
+    public function setOrganizationName(string $organizationName): self { $this->organizationName = $organizationName; return $this; }
 
     public function getResponsiblePerson(): ?string { return $this->responsiblePerson; }
     public function setResponsiblePerson(string $responsiblePerson): self { $this->responsiblePerson = $responsiblePerson; return $this; }
 
-    public function getSector(): ?string { return $this->sector; }
-    public function setSector(?string $sector): self { $this->sector = $sector; return $this; }
+    public function getSector(): string { return $this->sector; }
+    public function setSector(string $sector): self { $this->sector = $sector; return $this; }
+
+    public function getPhoneNumber(): ?string { return $this->phoneNumber; }
+    public function setPhoneNumber(?string $phoneNumber): self { $this->phoneNumber = $phoneNumber; return $this; }
+
+    public function getWebsite(): ?string { return $this->website; }
+    public function setWebsite(?string $website): self { $this->website = $website; return $this; }
+
+    public function isVerified(): bool { return $this->isVerified; }
+    public function setIsVerified(bool $isVerified): self { $this->isVerified = $isVerified; return $this; }
+
+    public function getSlug(): ?string { return $this->slug; }
+    public function setSlug(?string $slug): self { $this->slug = $slug; return $this; }
 
     public function getAddress(): ?string { return $this->address; }
     public function setAddress(?string $address): self { $this->address = $address; return $this; }

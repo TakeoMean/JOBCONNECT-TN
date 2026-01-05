@@ -27,7 +27,7 @@ class RecruiterController extends AbstractController
         if ($request->isMethod('POST')) {
             $recruiter = new Recruiter();
             $recruiter->setEmail($request->request->get('email'))
-                ->setCompanyName($request->request->get('companyName'))
+                ->setOrganizationName($request->request->get('companyName'))
                 ->setResponsiblePerson($request->request->get('responsiblePerson'))
                 ->setSector($request->request->get('sector'))
                 ->setAddress($request->request->get('address'))
@@ -312,20 +312,20 @@ public function createTest(Application $application, Request $request, EntityMan
 
         $message = new \App\Entity\Message();
         $message->setSender($this->getUser())
-                ->setReceiver($candidate)
-                ->setSubject($subject ?: 'Message de ' . $this->getUser()->getCompanyName())
-                ->setContent($content)
-                ->setIsRead(false)
-                ->setSentAt(new \DateTimeImmutable());
+            ->setReceiver($candidate)
+            ->setSubject($subject ?: 'Message de ' . $this->getUser()->getOrganizationName())
+            ->setContent($content)
+            ->setIsRead(false)
+            ->setSentAt(new \DateTimeImmutable());
 
         $em->persist($message);
 
         // Create notification for the candidate
         $notification = new \App\Entity\Notification();
         $notification->setCandidate($candidate)
-                    ->setTitle('Nouveau message reçu')
-                    ->setMessage('Vous avez reçu un nouveau message de ' . $this->getUser()->getCompanyName())
-                    ->setIsRead(false);
+                ->setTitle('Nouveau message reçu')
+                ->setMessage('Vous avez reçu un nouveau message de ' . $this->getUser()->getOrganizationName())
+                ->setIsRead(false);
 
         $em->persist($notification);
         $em->flush();

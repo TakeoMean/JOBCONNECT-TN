@@ -29,6 +29,18 @@ class JobOffer
     #[ORM\Column(nullable: true)]
     private ?int $salary = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phoneNumber = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $website = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
+    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    private ?string $slug = null;
+
     #[ORM\Column(type: 'boolean')]
     private bool $isRemote = false;
 
@@ -72,6 +84,18 @@ class JobOffer
 
     public function getSalary(): ?int { return $this->salary; }
     public function setSalary(?int $salary): self { $this->salary = $salary; return $this; }
+
+    public function getPhoneNumber(): ?string { return $this->phoneNumber; }
+    public function setPhoneNumber(?string $phoneNumber): self { $this->phoneNumber = $phoneNumber; return $this; }
+
+    public function getWebsite(): ?string { return $this->website; }
+    public function setWebsite(?string $website): self { $this->website = $website; return $this; }
+
+    public function isVerified(): bool { return $this->isVerified; }
+    public function setIsVerified(bool $isVerified): self { $this->isVerified = $isVerified; return $this; }
+
+    public function getSlug(): ?string { return $this->slug; }
+    public function setSlug(?string $slug): self { $this->slug = $slug; return $this; }
 
     public function getIsRemote(): bool { return $this->isRemote; }
     public function setIsRemote(bool $isRemote): self { $this->isRemote = $isRemote; return $this; }

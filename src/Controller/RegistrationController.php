@@ -53,7 +53,7 @@ class RegistrationController extends AbstractController
         if ($request->isMethod('POST')) {
             $recruiter = new Recruiter();
             $recruiter->setEmail($request->request->get('email'));
-            $recruiter->setCompanyName($request->request->get('companyName'));
+            $recruiter->setOrganizationName($request->request->get('companyName'));
             $recruiter->setResponsiblePerson($request->request->get('responsiblePerson'));
             $recruiter->setRoles(['ROLE_RECRUITER']);
             $recruiter->setPassword($hasher->hashPassword($recruiter, $request->request->get('password')));

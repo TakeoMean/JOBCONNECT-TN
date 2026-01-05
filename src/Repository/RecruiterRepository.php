@@ -44,7 +44,7 @@ class RecruiterRepository extends ServiceEntityRepository
             ->join('r.jobOffers', 'j')  // Assuming "jobOffers" is the relation field on Recruiter
             ->andWhere('j.isPublished = true')  // Filters for active (published) job offers
             ->groupBy('r.id')  // Ensures unique recruiters in the result
-            ->orderBy('r.companyName', 'ASC')  // Sorting by company name (adjust as needed)
+            ->orderBy('r.organizationName', 'ASC')  // Sorting by organization name (adjust as needed)
             ->getQuery()
             ->getResult();
     }
@@ -59,9 +59,9 @@ class RecruiterRepository extends ServiceEntityRepository
     public function searchByCompanyName(string $companyName): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.companyName LIKE :companyName')
+            ->andWhere('r.organizationName LIKE :companyName')
             ->setParameter('companyName', '%' . $companyName . '%')  // Partial match
-            ->orderBy('r.companyName', 'ASC')  // Sorting by company name (adjust as needed)
+            ->orderBy('r.organizationName', 'ASC')  // Sorting by organization name (adjust as needed)
             ->getQuery()
             ->getResult();
     }
@@ -79,7 +79,7 @@ class RecruiterRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('r')
             ->setFirstResult(($page - 1) * $limit)  // Calculate the starting point for pagination
             ->setMaxResults($limit)  // Limit the number of results per page
-            ->orderBy('r.companyName', 'ASC');  // Optional sorting by company name
+            ->orderBy('r.organizationName', 'ASC');  // Optional sorting by organization name
 
         return $queryBuilder->getQuery()->getResult();
     }
