@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "769639d3e7ac5c126fa2e2b9d7398c70",
+    "content-hash": "ccb60d5af158198db4824b6301647fe0",
     "packages": [
         {
             "name": "composer/semver",
@@ -6211,16 +6211,16 @@
         },
         {
             "name": "symfony/runtime",
-            "version": "v7.4.1",
+            "version": "v7.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/runtime.git",
-                "reference": "876f902a6cb6b26c003de244188c06b2ba1c172f"
+                "reference": "e3dd6c0f46a6810b3245726e8452cee45754e628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/runtime/zipball/876f902a6cb6b26c003de244188c06b2ba1c172f",
-                "reference": "876f902a6cb6b26c003de244188c06b2ba1c172f",
+                "url": "https://api.github.com/repos/symfony/runtime/zipball/e3dd6c0f46a6810b3245726e8452cee45754e628",
+                "reference": "e3dd6c0f46a6810b3245726e8452cee45754e628",
                 "shasum": ""
             },
             "require": {
@@ -6270,7 +6270,7 @@
                 "runtime"
             ],
             "support": {
-                "source": "https://github.com/symfony/runtime/tree/v7.4.1"
+                "source": "https://github.com/symfony/runtime/tree/v7.4.0"
             },
             "funding": [
                 {
@@ -6290,7 +6290,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-05T14:04:53+00:00"
+            "time": "2025-11-04T03:05:49+00:00"
         },
         {
             "name": "symfony/security-bundle",
