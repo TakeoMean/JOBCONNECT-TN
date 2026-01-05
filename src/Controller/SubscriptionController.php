@@ -12,17 +12,21 @@ class SubscriptionController extends AbstractController
 {
     // ------------------- Display Candidate Subscription Plans -------------------
     #[Route('/abonnement/candidat', name: 'candidate_plans')]
-    #[IsGranted('ROLE_CANDIDATE')]
     public function candidatePlans(): Response
     {
+        if (!$this->isGranted('ROLE_CANDIDATE') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
         return $this->render('subscription/candidate_plans.html.twig');
     }
 
     // ------------------- Display Recruiter Subscription Plans -------------------
     #[Route('/abonnement/recruteur', name: 'recruiter_plans')]
-    #[IsGranted('ROLE_RECRUITER')]
     public function recruiterPlans(): Response
     {
+        if (!$this->isGranted('ROLE_RECRUITER') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
         return $this->render('subscription/recruiter_plans.html.twig');
     }
 

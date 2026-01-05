@@ -13,7 +13,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
 #[ORM\DiscriminatorMap([
     "candidate" => Candidate::class,
-    "recruiter" => Recruiter::class
+    "recruiter" => Recruiter::class,
+    "admin" => Admin::class
 ])]
 abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

@@ -19,15 +19,15 @@ security:
                 check_path: app_login
                 username_parameter: email
                 password_parameter: password
-                default_target_path: /offres
-                always_use_default_target_path: false
-
+                default_target_path: /redirect-after-login
+                always_use_default_target_path: true
 
             logout:
                 path: app_logout
-                target: /
+                target: app_login
 
     access_control:
+             - { path: ^/admin, roles: ROLE_ADMIN }
              - { path: ^/login, roles: PUBLIC_ACCESS }
              - { path: ^/offres, roles: PUBLIC_ACCESS }
              - { path: ^/offre/\d+/postuler, roles: ROLE_CANDIDATE }

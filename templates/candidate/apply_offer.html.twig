@@ -76,18 +76,22 @@
                         <i class="bi bi-file-earmark-pdf mr-2"></i>
                         Curriculum Vitae *
                     </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+
+                    <!-- Simple File Input -->
+                    <div class="space-y-2">
                         {{ form_widget(form.cvFile, {'attr': {
-                            class: 'hidden',
+                            class: 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100',
                             accept: '.pdf,.doc,.docx'
                         }}) }}
-                        <div class="cursor-pointer" onclick="document.querySelector('input[type=file]').click()">
-                            <i class="bi bi-cloud-upload text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-600 font-medium">Cliquez pour sélectionner votre CV</p>
-                            <p class="text-sm text-gray-500">PDF, DOC, DOCX • Maximum 5MB</p>
-                        </div>
+
+                        <!-- File Requirements -->
+                        <p class="text-xs text-gray-500">
+                            <i class="bi bi-info-circle mr-1"></i>
+                            Formats acceptés: PDF, DOC, DOCX • Taille maximum: 5MB
+                        </p>
+
+                        {{ form_errors(form.cvFile) }}
                     </div>
-                    {{ form_errors(form.cvFile) }}
                 </div>
 
                 <!-- Motivation Letter -->
@@ -160,4 +164,40 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Simple validation for file input
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+
+    fileInputs.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                // Validate file type
+                const allowedTypes = [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Veuillez sélectionner un fichier PDF, DOC ou DOCX uniquement.');
+                    input.value = '';
+                    return;
+                }
+
+                // Validate file size (5MB max)
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    alert('Le fichier ne doit pas dépasser 5MB.');
+                    input.value = '';
+                    return;
+                }
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
