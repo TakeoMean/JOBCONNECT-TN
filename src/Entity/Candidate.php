@@ -40,11 +40,16 @@ class Candidate extends User
     #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Application::class, orphanRemoval: true)]
     private Collection $applications;
 
+    // --- Saved Offers ---
+    #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: SavedOffer::class, orphanRemoval: true)]
+    private Collection $savedOffers;
+
     public function __construct()
     {
         parent::__construct();
         $this->notifications = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->savedOffers = new ArrayCollection();
     }
 
     // --- Photo methods ---
@@ -161,6 +166,34 @@ class Candidate extends User
         if ($this->applications->removeElement($application)) {
             if ($application->getCandidate() === $this) {
                 $application->setCandidate(null);
+            }
+        }
+        return $this;
+    }
+
+    // --- Saved Offers methods ---
+    /**
+     * @return Collection<int, SavedOffer>
+     */
+    public function getSavedOffers(): Collection
+    {
+        return $this->savedOffers;
+    }
+
+    public function addSavedOffer(SavedOffer $savedOffer): self
+    {
+        if (!$this->savedOffers->contains($savedOffer)) {
+            $this->savedOffers->add($savedOffer);
+            $savedOffer->setCandidate($this);
+        }
+        return $this;
+    }
+
+    public function removeSavedOffer(SavedOffer $savedOffer): self
+    {
+        if ($this->savedOffers->removeElement($savedOffer)) {
+            if ($savedOffer->getCandidate() === $this) {
+                $savedOffer->setCandidate(null);
             }
         }
         return $this;

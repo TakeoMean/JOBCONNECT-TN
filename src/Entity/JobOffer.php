@@ -41,7 +41,7 @@ class JobOffer
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\ManyToOne(targetEntity: Recruiter::class)]
+    #[ORM\ManyToOne(targetEntity: Recruiter::class, inversedBy: 'jobOffers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Recruiter $recruiter = null;
 

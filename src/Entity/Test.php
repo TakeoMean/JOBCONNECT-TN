@@ -28,7 +28,7 @@ class Test
     #[ORM\JoinColumn(nullable: false)]
     private ?Recruiter $recruiter = null;
 
-    #[ORM\ManyToOne(targetEntity: JobOffer::class)]
+    #[ORM\ManyToOne(targetEntity: JobOffer::class, inversedBy: 'tests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?JobOffer $jobOffer = null;
 

@@ -302,6 +302,7 @@ public function createTest(Application $application, Request $request, EntityMan
             ->andWhere('o.recruiter = :recruiter')
             ->setParameter('candidate', $candidate)
             ->setParameter('recruiter', $this->getUser())
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 

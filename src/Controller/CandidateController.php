@@ -336,6 +336,7 @@ class CandidateController extends AbstractController
             ->andWhere('o.recruiter = :recruiter')
             ->setParameter('candidate', $this->getUser())
             ->setParameter('recruiter', $recruiter)
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 

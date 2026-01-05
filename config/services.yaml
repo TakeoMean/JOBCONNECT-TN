@@ -31,10 +31,7 @@ services:
     #     arguments:
     #         $someArgument: 'value'
 
-    # You can also configure specific services with custom arguments, if necessary:
-    # App\Service\SomeService:
-    #     arguments:
-    #         $fileDirectory: '%candidate_photo_directory%'
+
 
     
     # Default configuration for services
